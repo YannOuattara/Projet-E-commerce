@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Confirmer la commande - {{ commande.numero_commande }}{% endblock %}
+
+{% block hero %}
+<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({% static 'images/bg_3.jpg' %});" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+      <div class="col-md-9 ftco-animate pb-5">
+        <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'ecommerce:vendeur_dashboard' %}">Dashboard <i class="ion-ios-arrow-forward"></i></a></span>
+        <span><a href="{% url 'ecommerce:vendeur_commandes' %}">Commandes <i class="ion-ios-arrow-forward"></i></a></span>
+        <span>Confirmer commande <i class="ion-ios-arrow-forward"></i></span></p>
+        <h1 class="mb-3 bread">
+          <i class="ion-ios-checkmark-circle mr-3 text-success"></i>
+          Confirmer la commande
+        </h1>
+        <p class="text-white-50">Commande {{ commande.numero_commande }} - {{ commande.client.username }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="ion-ios-paper mr-2"></i>
+                            Détails de la commande {{ commande.numero_commande }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Informations générales -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-primary">
+                                            <i class="ion-ios-information-circle mr-2"></i>Informations générales
+                                        </h6>
+                                        <p class="mb-1"><strong>Date:</strong> {{ commande.date_commande|date:"d/m/Y à H:i" }}</p>
+                                        <p class="mb-1"><strong>Client:</strong> {{ commande.client.username }}</p>
+                                        <p class="mb-1"><strong>Statut actuel:</strong>
+                                            <span class="badge badge-warning">En attente de confirmation</span>
+                                        </p>
+                                        <p class="mb-0"><strong>Téléphone:</strong> {{ commande.telephone }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-primary">
+                                            <i class="ion-ios-home mr-2"></i>Adresse de livraison
+                                        </h6>
+                                        <p class="mb-0">{{ commande.adresse_livraison }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Produits commandés -->
+                        <div class="card border-0">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">
+                                    <i class="ion-ios-cart mr-2 text-primary"></i>
+                                    Produits commandés (vos produits uniquement)
+                                </h6>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-striped mb-0">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th><i class="ion-ios-car mr-1"></i>Produit</th>
+                                                <th class="text-center"><i class="ion-ios-stats mr-1"></i>Quantité demandée</th>
+                                                <th class="text-center"><i class="ion-ios-stats mr-1"></i>Stock disponible</th>
+                                                <th class="text-right"><i class="ion-ios-pricetag mr-1"></i>Prix unit.</th>
+                                                <th class="text-right"><i class="ion-ios-calculator mr-1"></i>Sous-total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for ligne in commande.lignes_commande.all %}
+                                                {% if ligne.produit.vendeur == user %}
+                                                    <tr class="{% if ligne.quantite > ligne.produit.stock %}table-danger{% endif %}">
+                                                        <td>
+                                                            <strong>{{ ligne.produit.nom }}</strong>
+                                                            {% if ligne.produit.marque %}
+                                                                <br><small class="text-muted">{{ ligne.produit.marque }} {{ ligne.produit.modele }}</small>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span class="badge badge-primary badge-pill">{{ ligne.quantite }}</span>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            {% if ligne.quantite > ligne.produit.stock %}
+                                                                <span class="badge badge-danger">{{ ligne.produit.stock }}</span>
+                                                                <br><small class="text-danger">Stock insuffisant !</small>
+                                                            {% else %}
+                                                                <span class="badge badge-success">{{ ligne.produit.stock }}</span>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td class="text-right">{{ ligne.prix_unitaire }}€</td>
+                                                        <td class="text-right"><strong class="text-success">{{ ligne.get_sous_total }}€</strong></td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot class="bg-light">
+                                            <tr>
+                                                <th colspan="4" class="text-right font-weight-bold">Total de vos produits</th>
+                                                <th class="text-right">
+                                                    <span class="h5 text-success font-weight-bold">
+                                                        {% for ligne in commande.lignes_commande.all %}
+                                                            {% if ligne.produit.vendeur == user %}
+                                                                {{ ligne.get_sous_total|add:0 }}
+                                                            {% endif %}
+                                                        {% endfor %}€
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <div class="card border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-warning">
+                                            <i class="ion-ios-information-circle mr-2"></i>
+                                            Que souhaitez-vous faire ?
+                                        </h6>
+                                        <p class="mb-3">Vérifiez la disponibilité des produits et prenez votre décision :</p>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="text-center">
+                                                    <button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#confirmerModal">
+                                                        <i class="ion-ios-checkmark-circle mr-2"></i>
+                                                        Confirmer la commande
+                                                    </button>
+                                                    <small class="text-muted d-block mt-2">
+                                                        Valider et préparer l'envoi
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-center">
+                                                    <button type="button" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#refuserModal">
+                                                        <i class="ion-ios-close-circle mr-2"></i>
+                                                        Refuser la commande
+                                                    </button>
+                                                    <small class="text-muted d-block mt-2">
+                                                        Annuler la commande
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal de confirmation -->
+<div class="modal fade" id="confirmerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="ion-ios-checkmark-circle mr-2"></i>Confirmer la commande
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir confirmer cette commande ?</p>
+                <p class="text-muted">Cette action validera la commande et mettra à jour le stock des produits.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="confirmer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="ion-ios-checkmark-circle mr-1"></i>Confirmer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de refus -->
+<div class="modal fade" id="refuserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="ion-ios-close-circle mr-2"></i>Refuser la commande
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Pourquoi refusez-vous cette commande ?</p>
+                <div class="form-group">
+                    <label for="raisonRefus">Raison du refus (optionnel)</label>
+                    <textarea class="form-control" id="raisonRefus" name="raison_refus" rows="3" placeholder="Expliquez brièvement la raison du refus..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="refuser">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="ion-ios-close-circle mr-1"></i>Refuser
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

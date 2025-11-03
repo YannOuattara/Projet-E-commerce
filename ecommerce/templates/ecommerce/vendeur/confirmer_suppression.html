@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Confirmer la suppression - Mon Gba{% endblock %}
+
+{% block hero %}
+<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({% static 'images/bg_3.jpg' %});" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+      <div class="col-md-9 ftco-animate pb-5">
+        <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'ecommerce:index' %}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Espace Vendeur <i class="ion-ios-arrow-forward"></i></span></p>
+        <h1 class="mb-3 bread">Confirmer la suppression</h1>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6" data-aos="fade-up" data-aos-duration="1000">
+                <div class="card">
+                    <div class="card-header bg-danger text-white">
+                        <h4 class="mb-0">Confirmer la suppression</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="lead">Êtes-vous sûr de vouloir supprimer ce produit ?</p>
+                        
+                        {% if produit.image %}
+                            <img src="{{ produit.image.url }}" alt="{{ produit.nom }}" class="img-fluid mb-3" style="max-width: 300px;">
+                        {% endif %}
+                        
+                        <h5>{{ produit.nom }}</h5>
+                        <p class="text-muted">{{ produit.description|truncatewords:20 }}</p>
+                        <p><strong>Prix :</strong> {{ produit.prix }} €</p>
+                        <p><strong>Stock :</strong> {{ produit.stock }}</p>
+
+                        <div class="alert alert-warning mt-3">
+                            <strong>Attention !</strong> Cette action est irréversible.
+                        </div>
+
+                        <form method="post" class="mt-4">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-lg mr-2">Oui, supprimer</button>
+                            <a href="{% url 'ecommerce:vendeur_produits' %}" class="btn btn-secondary btn-lg">Annuler</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

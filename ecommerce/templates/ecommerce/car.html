@@ -1,0 +1,223 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Mon Gba - Free Bootstrap 4 Template by Colorlib</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
+
+    
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+    
+	  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	    <div class="container">
+	      <a class="navbar-brand" href="{% url 'ecommerce:index' %}">Mon<span>Gba</span></a>
+	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
+
+	      <div class="collapse navbar-collapse" id="ftco-nav">
+	        <ul class="navbar-nav ml-auto">
+	          <li class="nav-item"><a href="{% url 'ecommerce:index' %}" class="nav-link">Accueil</a></li>
+	          <li class="nav-item"><a href="{% url 'ecommerce:services' %}" class="nav-link">Services</a></li>
+	          <li class="nav-item active"><a href="{% url 'ecommerce:car' %}" class="nav-link">Voitures</a></li>
+	          {% if user.is_authenticated %}
+	          {% if user.profil.est_client %}
+	          <li class="nav-item"><a href="{% url 'ecommerce:profil_client' %}" class="nav-link">Profil</a></li>
+	          {% endif %}
+	          {% if user.profil.est_vendeur %}
+	          <li class="nav-item"><a href="{% url 'ecommerce:profil_vendeur_prive' %}" class="nav-link">Profil</a></li>
+	          {% endif %}
+	          <li class="nav-item"><a href="{% url 'account_logout' %}" class="nav-link">Déconnexion</a></li>
+	          {% else %}
+	          <li class="nav-item"><a href="{% url 'account_login' %}" class="nav-link">Connexion</a></li>
+	          {% endif %}
+	        </ul>
+	      </div>
+	    </div>
+	  </nav>
+    <!-- END nav -->
+    
+    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({% static 'images/bg_3.jpg' %});" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+          <div class="col-md-9 ftco-animate pb-5">
+          	<p class="breadcrumbs"><span class="mr-2"><a href="{% url 'ecommerce:index' %}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Cars <i class="ion-ios-arrow-forward"></i></span></p>
+            <h1 class="mb-3 bread">Choose Your Car</h1>
+          </div>
+        </div>
+      </div>
+    
+	  <section class="ftco-section bg-light">
+		<div class="container">
+			<div class="row">
+				{% for car in cars %}
+				<div class="col-md-4">
+					<div class="car-wrap rounded ftco-animate">
+						<div class="img rounded d-flex align-items-end" style="background-image: url({{ car.image.url }}); position: relative;">
+							{% if user.is_authenticated and user.profil.est_client %}
+							<span class="favorite-icon" onclick="window.location.href='{% url 'ecommerce:toggle_favorite' car.id %}'" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.8); border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;">
+								<i class="fa {% if car.id in user_favoris %}fa-heart{% else %}fa-heart-o{% endif %}" style="color: {% if car.id in user_favoris %}#e74c3c{% else %}#333{% endif %}; font-size: 18px;"></i>
+							</span>
+							{% endif %}
+						</div>
+						<div class="text">
+							<h2 class="mb-0"><a href="{% url 'ecommerce:car_single' car.id %}">{{ car.nom }}</a></h2>
+							<div class="d-flex mb-3">
+								<span class="cat">{{ car.categorie.nom|default:"Général" }}</span>
+								<p class="price ml-auto">{{ car.prix }}€</p>
+							</div>
+							<p class="mb-2"><small class="text-muted">Vendu par : <strong>{{ car.vendeur.username }}</strong></small></p>
+							<p class="d-flex mb-0 d-block">
+								{% if user.is_authenticated and user.profil.est_client %}
+								<a href="{% url 'ecommerce:ajouter_au_panier' car.id %}" class="btn btn-primary py-2 mr-1">Ajouter panier</a> 
+								{% endif %}
+								<a href="{% url 'ecommerce:car_single' car.id %}" class="btn btn-secondary py-2 ml-1">Details</a>
+							</p>
+						</div>
+					</div>
+				</div>
+				{% empty %}
+				<div class="col-12 text-center">
+					<p>Aucun véhicule disponible pour le moment.</p>
+				</div>
+				{% endfor %}
+			</div>
+			
+			<!-- Pagination (vous pouvez l'adapter pour qu'elle fonctionne dynamiquement) -->
+			<div class="row mt-5">
+				<div class="col text-center">
+					<div class="block-27">
+						<ul>
+							{% if cars.has_previous %}
+								<li><a href="?page={{ cars.previous_page_number }}">&lt;</a></li>
+							{% else %}
+								<li class="disabled"><span>&lt;</span></li>
+							{% endif %}
+							
+							{% for num in page_range %}
+    							{% if cars.number == num %}
+        							<li class="active"><span>{{ num }}</span></li>
+    							{% else %}
+        							<li><a href="?page={{ num }}">{{ num }}</a></li>
+    							{% endif %}
+							{% endfor %}
+							
+							{% if cars.has_next %}
+								<li><a href="?page={{ cars.next_page_number }}">&gt;</a></li>
+							{% else %}
+								<li class="disabled"><span>&gt;</span></li>
+							{% endif %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+    
+
+    <footer class="ftco-footer ftco-bg-dark ftco-section">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-md">
+            <div class="ftco-footer-widget mb-4">
+              <h2 class="ftco-heading-2"><a href="#" class="logo">Mon<span>Gba</span></a></h2>
+              <p>Votre partenaire de confiance pour trouver la voiture de vos rêves au meilleur prix, avec un service personnalisé et professionnel.</p>
+              <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="ftco-footer-widget mb-4 ml-md-5">
+              <h2 class="ftco-heading-2">Information</h2>
+              <ul class="list-unstyled">
+                <li><a href="#" class="py-2 d-block">About</a></li>
+                <li><a href="#" class="py-2 d-block">Services</a></li>
+                <li><a href="#" class="py-2 d-block">Term and Conditions</a></li>
+                <li><a href="#" class="py-2 d-block">Best Price Guarantee</a></li>
+                <li><a href="#" class="py-2 d-block">Privacy &amp; Cookies Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md">
+             <div class="ftco-footer-widget mb-4">
+              <h2 class="ftco-heading-2">Customer Support</h2>
+              <ul class="list-unstyled">
+                <li><a href="#" class="py-2 d-block">FAQ</a></li>
+                <li><a href="#" class="py-2 d-block">Payment Option</a></li>
+                <li><a href="#" class="py-2 d-block">Booking Tips</a></li>
+                <li><a href="#" class="py-2 d-block">How it works</a></li>
+                <li><a href="#" class="py-2 d-block">Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="ftco-footer-widget mb-4">
+            	<h2 class="ftco-heading-2">Have a Questions?</h2>
+            	<div class="block-23 mb-3">
+	              <ul>
+	                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+	              </ul>
+	            </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </footer>
+    
+  
+
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+  <script src="{% static 'js/aos.js' %}"></script>
+  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+  <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
+  <script src="{% static 'js/scrollax.min.js' %}"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="{% static 'js/google-map.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+    
+  </body>
+</html>

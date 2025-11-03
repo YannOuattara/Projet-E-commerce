@@ -1,0 +1,28 @@
+{% load static %}
+<div class="container mt-4" data-aos="fade-down" data-aos-duration="1000">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="d-flex justify-content-between list-unstyled">
+                <li class="etape-item {% if etape == 1 %}active{% endif %} {% if etape > 1 %}completed{% endif %}" data-aos="zoom-in" data-aos-delay="100">
+                    <span class="badge {% if etape >= 1 %}badge-primary{% else %}badge-secondary{% endif %} mr-2">1</span> Panier
+                    {% if etape > 1 %}<i class="ion-ios-checkmark-circle text-success ml-2"></i>{% endif %}
+                </li>
+                <li class="etape-item {% if etape == 2 %}active{% endif %} {% if etape > 2 %}completed{% endif %}" data-aos="zoom-in" data-aos-delay="200">
+                    <span class="badge {% if etape >= 2 %}badge-primary{% else %}badge-secondary{% endif %} mr-2">2</span> Informations Client
+                    {% if etape > 2 %}<i class="ion-ios-checkmark-circle text-success ml-2"></i>{% endif %}
+                </li>
+                <li class="etape-item {% if etape == 3 %}active{% endif %} {% if etape > 3 %}completed{% endif %}" data-aos="zoom-in" data-aos-delay="300">
+                    <span class="badge {% if etape >= 3 %}badge-primary{% else %}badge-secondary{% endif %} mr-2">3</span> Mode d'Expédition
+                    {% if etape > 3 %}<i class="ion-ios-checkmark-circle text-success ml-2"></i>{% endif %}
+                </li>
+                <li class="etape-item {% if etape == 4 %}active{% endif %} {% if etape > 4 %}completed{% endif %}" data-aos="zoom-in" data-aos-delay="400">
+                    <span class="badge {% if etape >= 4 %}badge-primary{% else %}badge-secondary{% endif %} mr-2">4</span> Facturation et Paiement
+                    {% if etape > 4 %}<i class="ion-ios-checkmark-circle text-success ml-2"></i>{% endif %}
+                </li>
+                <li class="etape-item {% if etape == 5 %}active{% endif %}" data-aos="zoom-in" data-aos-delay="500">
+                    <span class="badge {% if etape >= 5 %}badge-primary{% else %}badge-secondary{% endif %} mr-2">5</span> Complété
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

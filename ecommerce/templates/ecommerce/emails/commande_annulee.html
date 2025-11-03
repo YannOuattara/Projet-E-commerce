@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commande annulée - MonGba</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: white;
+            margin: 20px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #dc3545;
+        }
+        .header h1 {
+            color: #dc3545;
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .commande-info {
+            background-color: #f8d7da;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #f5c6cb;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .cancel-icon {
+            font-size: 48px;
+            color: #dc3545;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .refund-info {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="cancel-icon">❌</div>
+            <h1>Commande annulée</h1>
+            <p>Votre commande a été annulée par le vendeur</p>
+        </div>
+
+        <div class="content">
+            <p>Bonjour <strong>{{ client.username }}</strong>,</p>
+
+            <p>Nous sommes désolés de vous informer que votre commande a été <strong>annulée</strong> par le vendeur.</p>
+
+            <div class="commande-info">
+                <h3>📋 Détails de la commande annulée</h3>
+                <p><strong>Numéro de commande :</strong> {{ commande.numero_commande }}</p>
+                <p><strong>Date de commande :</strong> {{ commande.date_commande|date:"d/m/Y à H:i" }}</p>
+                <p><strong>Montant :</strong> {{ commande.montant_total }}€</p>
+                <p><strong>Statut :</strong> <span style="color: #dc3545; font-weight: bold;">Annulée ✗</span></p>
+                {% if commande.notes %}
+                    <p><strong>Raison de l'annulation :</strong> {{ commande.notes }}</p>
+                {% endif %}
+            </div>
+
+            <div class="refund-info">
+                <h4>💰 Remboursement</h4>
+                <p>Le montant de votre commande (<strong>{{ commande.montant_total }}€</strong>) va être automatiquement remboursé sur votre moyen de paiement initial.</p>
+                <p>Le remboursement peut prendre 3 à 5 jours ouvrés selon votre banque.</p>
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{ lien_commandes }}" class="btn">📋 Voir mes commandes</a>
+            </div>
+
+            <p>Nous nous excusons pour la gêne occasionnée. Si vous avez des questions concernant cette annulation, n'hésitez pas à nous contacter.</p>
+
+            <p>Vous pouvez passer une nouvelle commande à tout moment sur notre plateforme.</p>
+
+            <p>Cordialement,<br>
+            <strong>L'équipe MonGba</strong></p>
+        </div>
+
+        <div class="footer">
+            <p>Cet email a été envoyé automatiquement par MonGba.<br>
+            Ne pas répondre à cet email.</p>
+        </div>
+    </div>
+</body>
+</html>

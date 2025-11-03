@@ -1,0 +1,81 @@
+/* Boutons avec effet de survol */
+.btn-primary, .btn-success, .btn-warning, .btn-danger {
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover, .btn-success:hover, .btn-warning:hover, .btn-danger:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation pour les formulaires */
+.form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    transition: all 0.3s ease;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    transform: scale(1.02);
+}
+
+/* Animation pour la barre de progression */
+.etape-item {
+    transition: all 0.5s ease;
+}
+
+.etape-item.active {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.etape-item.completed i {
+    animation: bounce 0.5s ease;
+}
+
+/* Animation pour les lignes du tableau */
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+}
+
+/* Animation de succès */
+.success-message {
+    animation: fadeInUp 1s ease;
+}
+
+/* Keyframes pour animations personnalisées */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

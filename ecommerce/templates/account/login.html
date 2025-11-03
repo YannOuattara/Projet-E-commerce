@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Connexion - Mon Gba{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5" data-aos="fade-up" data-aos-duration="1000">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h4 class="mb-0 text-center">Connexion</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'account_login' %}">
+                            {% csrf_token %}
+                            
+                            <!-- Messages d'erreur -->
+                            {% if form.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>Erreur :</strong>
+                                    {% for field in form %}
+                                        {% if field.errors %}
+                                            {% for error in field.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Nom d'utilisateur ou Email -->
+                            <div class="form-group">
+                                <label for="id_login">Nom d'utilisateur ou Email *</label>
+                                <input type="text" class="form-control" name="login" id="id_login" placeholder="Nom d'utilisateur ou email" required autofocus>
+                            </div>
+                            
+                            <!-- Mot de passe -->
+                            <div class="form-group">
+                                <label for="id_password">Mot de passe *</label>
+                                <input type="password" class="form-control" name="password" id="id_password" required>
+                            </div>
+                            
+                            <!-- Se souvenir de moi -->
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="id_remember" name="remember">
+                                <label class="form-check-label" for="id_remember">
+                                    Se souvenir de moi
+                                </label>
+                            </div>
+                            
+                            <!-- Bouton soumettre -->
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                    Se connecter
+                                </button>
+                            </div>
+                            
+                            <!-- Liens supplémentaires -->
+                            <div class="text-center mt-3">
+                                <p class="mb-2">
+                                    <a href="{% url 'account_reset_password' %}">Mot de passe oublié ?</a>
+                                </p>
+                                <p class="mb-0">
+                                    Pas encore de compte ? <a href="{% url 'account_signup' %}">Créez-en un</a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

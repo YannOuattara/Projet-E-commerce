@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mon Profil Vendeur - Mon Gba{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
+                <h2 class="heading-section">Mon Profil Vendeur</h2>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Informations du profil -->
+            <div class="col-md-4" data-aos="fade-right" data-aos-duration="1000">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="icon icon-user"></i> Mes Informations</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Nom d'utilisateur:</strong> {{ vendeur.username }}</p>
+                        <p><strong>Email:</strong> {{ vendeur.email }}</p>
+                        {% if vendeur.first_name or vendeur.last_name %}
+                            <p><strong>Nom complet:</strong> {{ vendeur.get_full_name }}</p>
+                        {% endif %}
+                        {% if vendeur.profil.telephone %}
+                            <p><strong>Téléphone:</strong> {{ vendeur.profil.telephone }}</p>
+                        {% endif %}
+                        {% if vendeur.profil.adresse %}
+                            <p><strong>Adresse:</strong> {{ vendeur.profil.adresse }}</p>
+                        {% endif %}
+                        {% if vendeur.profil.company_name %}
+                            <p><strong>Entreprise:</strong> {{ vendeur.profil.company_name }}</p>
+                        {% endif %}
+                        {% if vendeur.profil.business_description %}
+                            <p><strong>Description:</strong> {{ vendeur.profil.business_description }}</p>
+                        {% endif %}
+                        <hr>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <h4 class="text-success">{{ nb_produits }}</h4>
+                                <small>Produits</small>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="text-primary">{{ total_ventes|floatformat:2 }} €</h4>
+                                <small>Ventes</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accès à l'espace vendeur -->
+            <div class="col-md-8" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="icon icon-settings"></i> Espace Vendeur</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">Accédez rapidement à toutes les fonctionnalités de votre espace vendeur :</p>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'ecommerce:vendeur_dashboard' %}" class="btn btn-outline-primary btn-block">
+                                    <i class="icon icon-dashboard"></i> Tableau de bord
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'ecommerce:vendeur_produits' %}" class="btn btn-outline-success btn-block">
+                                    <i class="icon icon-list"></i> Mes Produits ({{ nb_produits }})
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'ecommerce:vendeur_creer_produit' %}" class="btn btn-outline-warning btn-block">
+                                    <i class="icon icon-plus"></i> Créer un Produit
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'ecommerce:mes_commandes' %}" class="btn btn-outline-dark btn-block">
+                                    <i class="icon icon-eye"></i> Voir mes Commandes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dernières commandes -->
+        <div class="row mt-5" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="icon icon-shopping-cart"></i> Dernières Commandes de mes Produits</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if commandes %}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>N° Commande</th>
+                                            <th>Client</th>
+                                            <th>Date</th>
+                                            <th>Statut</th>
+                                            <th>Mes Ventes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for commande in commandes %}
+                                            <tr>
+                                                <td>{{ commande.numero_commande }}</td>
+                                                <td>{{ commande.client.username }}</td>
+                                                <td>{{ commande.date_commande|date:"d/m/Y" }}</td>
+                                                <td>
+                                                    <span class="badge 
+                                                        {% if commande.statut == 'livree' %}badge-success
+                                                        {% elif commande.statut == 'en_preparation' or commande.statut == 'expediee' %}badge-warning
+                                                        {% elif commande.statut == 'annulee' %}badge-danger
+                                                        {% else %}badge-secondary{% endif %}">
+                                                        {{ commande.get_statut_display }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    {% for ligne in commande.lignes_commande.all %}
+                                                        {% if ligne.produit.vendeur == vendeur %}
+                                                            {{ ligne.get_sous_total|floatformat:2 }} €<br>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </td>
+                                                
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a href="{% url 'ecommerce:mes_commandes' %}" class="btn btn-warning">Voir toutes les commandes</a>
+                            </div>
+                        {% else %}
+                            <p class="text-muted text-center">Aucune commande pour vos produits pour le moment.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

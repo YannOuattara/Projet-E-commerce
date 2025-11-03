@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gestion des emails - Carbook{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8" data-aos="fade-up" data-aos-duration="1000">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="mb-0 text-center">Gestion des adresses email</h4>
+                    </div>
+                    <div class="card-body">
+                        {% if user.emailaddress_set.all %}
+                            <p>Ces adresses email sont associées à votre compte :</p>
+
+                            <form method="post" action="{% url 'account_email' %}">
+                                {% csrf_token %}
+
+                                {% for emailaddress in user.emailaddress_set.all %}
+                                    <div class="form-check mb-3">
+                                        <input type="radio" name="email" class="form-check-input" value="{{ emailaddress.email }}" {% if emailaddress.primary %}checked{% endif %}>
+                                        <label class="form-check-label">
+                                            {{ emailaddress.email }}
+                                            {% if emailaddress.primary %}
+                                                <span class="badge badge-primary">Principale</span>
+                                            {% endif %}
+                                            {% if emailaddress.verified %}
+                                                <span class="badge badge-success">Vérifiée</span>
+                                            {% else %}
+                                                <span class="badge badge-warning">Non vérifiée</span>
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary" name="action_primary">
+                                        Définir comme adresse principale
+                                    </button>
+                                    <button type="submit" class="btn btn-danger" name="action_remove">
+                                        Supprimer l'adresse
+                                    </button>
+                                </div>
+                            </form>
+                        {% else %}
+                            <p class="text-muted">Aucune adresse email associée à votre compte.</p>
+                        {% endif %}
+
+                        <hr>
+
+                        <h5>Ajouter une nouvelle adresse email</h5>
+                        <form method="post" action="{% url 'account_email' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="id_email">Nouvelle adresse email</label>
+                                <input type="email" class="form-control" name="email" id="id_email" placeholder="nouvelle-adresse@email.com" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success" name="action_add">
+                                    Ajouter l'adresse
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="text-center mt-4">
+                            <a href="{% url 'ecommerce:index' %}" class="btn btn-secondary">
+                                Retour à l'accueil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

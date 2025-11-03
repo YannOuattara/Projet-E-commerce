@@ -1,0 +1,383 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mes Commandes - Mon Gba{% endblock %}
+
+{% block hero %}
+<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({% static 'images/bg_3.jpg' %});" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+      <div class="col-md-9 ftco-animate pb-5">
+        <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'ecommerce:profil_client' %}">Profil <i class="ion-ios-arrow-forward"></i></a></span>
+        
+        <span>
+          {% if user.profil.est_vendeur %}
+            Commandes reçues
+          {% else %}
+            Mes Commandes
+          {% endif %}
+          <i class="ion-ios-arrow-forward"></i>
+        </span></p>
+        <h1 class="mb-3 bread">
+          <i class="ion-ios-list mr-3 text-primary"></i>
+          {% if user.profil.est_vendeur %}
+            Commandes reçues
+          {% else %}
+            Mes Commandes
+          {% endif %}
+        </h1>
+        <p class="text-white-50">Connecté en tant que : <strong class="text-white">{{ user.username }}</strong> ({{ user.profil.get_role_display }})</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="ftco-section bg-light">
+    <div class="container">
+        <!-- Statistics Cards -->
+        {% if commandes %}
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <div class="card shadow-sm border-0" data-aos="fade-up">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-4">
+                            <i class="ion-ios-stats mr-2 text-primary"></i>
+                            Aperçu de vos commandes
+                        </h5>
+                        <div class="row text-center">
+                            <div class="col-md-4 mb-3">
+                                <div class="p-3 bg-primary text-white rounded">
+                                    <h2 class="mb-1">{{ commandes|length }}</h2>
+                                    <p class="mb-0 small">
+                                        {% if user.profil.est_vendeur %}
+                                            Commandes reçues
+                                        {% else %}
+                                            Total commandes
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="p-3 bg-success text-white rounded">
+                                    <h2 class="mb-1">{{ total_commandes }}€</h2>
+                                    <p class="mb-0 small">Montant total</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="p-3 bg-info text-white rounded">
+                                    <h2 class="mb-1">
+                                        {% for commande in commandes %}
+                                            {% if forloop.first %}
+                                                {{ commande.date_commande|date:"d/m" }}
+                                            {% endif %}
+                                        {% empty %}
+                                            -
+                                        {% endfor %}
+                                    </h2>
+                                    <p class="mb-0 small">Dernière activité</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Orders List -->
+        {% if commandes %}
+            <div class="row">
+                {% for commande in commandes %}
+                <div class="col-md-12 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-header bg-white border-0">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h5 class="mb-1">
+                                        <i class="ion-ios-paper mr-2 text-primary"></i>
+                                        Commande {{ commande.numero_commande }}
+                                    </h5>
+                                    <small class="text-muted">
+                                        <i class="ion-ios-calendar mr-1"></i>
+                                        {{ commande.date_commande|date:"l d F Y à H:i" }}
+                                    </small>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <span class="badge badge-pill badge-{% if commande.statut == 'confirmee' %}success{% elif commande.statut == 'annulee' %}danger{% elif commande.statut == 'livree' %}info{% else %}warning{% endif %} px-3 py-2">
+                                        {% if commande.statut == 'en_attente' %}
+                                            <i class="ion-ios-time mr-1"></i>
+                                        {% elif commande.statut == 'confirmee' %}
+                                            <i class="ion-ios-checkmark-circle mr-1"></i>
+                                        {% elif commande.statut == 'annulee' %}
+                                            <i class="ion-ios-close-circle mr-1"></i>
+                                        {% elif commande.statut == 'livree' %}
+                                            <i class="ion-ios-checkmark-circle-outline mr-1"></i>
+                                        {% else %}
+                                            <i class="ion-ios-refresh mr-1"></i>
+                                        {% endif %}
+                                        {{ commande.get_statut_display }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- Products Section -->
+                                <div class="col-md-8">
+                                    <h6 class="text-primary mb-3">
+                                        <i class="ion-ios-cart mr-2"></i>Produits commandés
+                                    </h6>
+                                    <div class="products-list">
+                                        {% for ligne in commande.lignes_commande.all %}
+                                            {% if user.profil.est_vendeur %}
+                                                {% if ligne.produit.vendeur == user %}
+                                                    <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="product-icon mr-3">
+                                                                <i class="ion-ios-car text-primary" style="font-size: 2rem;"></i>
+                                                            </div>
+                                                            <div>
+                                                                <h6 class="mb-0">{{ ligne.produit.nom }}</h6>
+                                                                {% if ligne.produit.marque %}
+                                                                    <small class="text-muted">{{ ligne.produit.marque }} {{ ligne.produit.modele }}</small>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <div class="badge badge-light px-2 py-1 mb-1">x{{ ligne.quantite }}</div>
+                                                            <div class="text-success font-weight-bold">{{ ligne.get_sous_total }}€</div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="product-icon mr-3">
+                                                            <i class="ion-ios-car text-primary" style="font-size: 2rem;"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-0">{{ ligne.produit.nom }}</h6>
+                                                            {% if ligne.produit.marque %}
+                                                                <small class="text-muted">{{ ligne.produit.marque }} {{ ligne.produit.modele }}</small>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <div class="badge badge-light px-2 py-1 mb-1">x{{ ligne.quantite }}</div>
+                                                        <div class="text-muted small">{{ ligne.prix_unitaire }}€ / unité</div>
+                                                        <div class="text-success font-weight-bold">{{ ligne.get_sous_total }}€</div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <!-- Order Summary -->
+                                <div class="col-md-4">
+                                    <div class="bg-light p-3 rounded">
+                                        <h6 class="text-primary mb-3">
+                                            <i class="ion-ios-information-circle mr-2"></i>Résumé
+                                        </h6>
+                                        {% if not user.profil.est_vendeur %}
+                                        <div class="mb-2">
+                                            <small class="text-muted">Client:</small>
+                                            <div class="font-weight-bold">{{ commande.client.username }}</div>
+                                        </div>
+                                        {% endif %}
+                                        <div class="mb-2">
+                                            <small class="text-muted">Téléphone:</small>
+                                            <div>{{ commande.telephone }}</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <small class="text-muted">Adresse:</small>
+                                            <div class="small">{{ commande.adresse_livraison }}</div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong class="text-primary">Total:</strong>
+                                            <strong class="text-success h4 mb-0">
+                                                {% if user.profil.est_vendeur %}
+                                                    {% for ligne in commande.lignes_commande.all %}
+                                                        {% if ligne.produit.vendeur == user %}
+                                                            {{ ligne.get_sous_total }}€
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% else %}
+                                                    {{ commande.montant_total }}€
+                                                {% endif %}
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <div class="text-right">
+                                <button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#commandeModal{{ commande.id }}">
+                                    <i class="ion-ios-eye mr-1"></i>Voir les détails complets
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal for details -->
+                <div class="modal fade" id="commandeModal{{ commande.id }}" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title">
+                                    <i class="ion-ios-paper mr-2"></i>
+                                    Détails de la commande {{ commande.numero_commande }}
+                                </h5>
+                                <button type="button" class="close text-white" data-dismiss="modal">
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="card border-0 bg-light">
+                                            <div class="card-body">
+                                                <h6 class="card-title text-primary">
+                                                    <i class="ion-ios-information-circle mr-2"></i>Informations
+                                                </h6>
+                                                <p class="mb-1"><strong>Date:</strong> {{ commande.date_commande|date:"d/m/Y à H:i" }}</p>
+                                                <p class="mb-1"><strong>Client:</strong> {{ commande.client.username }}</p>
+                                                <p class="mb-1"><strong>Statut:</strong>
+                                                    <span class="badge badge-pill badge-{% if commande.statut == 'en_attente_confirmation' %}secondary{% elif commande.statut == 'confirmee' %}success{% elif commande.statut == 'annulee' %}danger{% elif commande.statut == 'livree' %}info{% else %}warning{% endif %}">
+                                                        {% if commande.statut == 'en_attente_confirmation' %}
+                                                            <i class="ion-ios-time mr-1"></i>
+                                                        {% elif commande.statut == 'confirmee' %}
+                                                            <i class="ion-ios-checkmark-circle mr-1"></i>
+                                                        {% elif commande.statut == 'annulee' %}
+                                                            <i class="ion-ios-close-circle mr-1"></i>
+                                                        {% elif commande.statut == 'livree' %}
+                                                            <i class="ion-ios-checkmark-circle-outline mr-1"></i>
+                                                        {% else %}
+                                                            <i class="ion-ios-refresh mr-1"></i>
+                                                        {% endif %}
+                                                        {{ commande.get_statut_display }}
+                                                    </span>
+                                                </p>
+                                                <p class="mb-0"><strong>Téléphone:</strong> {{ commande.telephone }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card border-0 bg-light">
+                                            <div class="card-body">
+                                                <h6 class="card-title text-primary">
+                                                    <i class="ion-ios-home mr-2"></i>Adresse de livraison
+                                                </h6>
+                                                <p class="mb-0">{{ commande.adresse_livraison }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card border-0">
+                                    <div class="card-header bg-primary text-white">
+                                        <h6 class="mb-0">
+                                            <i class="ion-ios-cart mr-2"></i>Produits commandés
+                                        </h6>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped mb-0">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th><i class="ion-ios-car mr-1"></i>Produit</th>
+                                                        <th class="text-center"><i class="ion-ios-stats mr-1"></i>Quantité</th>
+                                                        <th class="text-right"><i class="ion-ios-pricetag mr-1"></i>Prix unit.</th>
+                                                        <th class="text-right"><i class="ion-ios-calculator mr-1"></i>Sous-total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for ligne in commande.lignes_commande.all %}
+                                                        {% if not user.profil.est_vendeur or ligne.produit.vendeur == user %}
+                                                            <tr>
+                                                                <td>
+                                                                    <strong>{{ ligne.produit.nom }}</strong>
+                                                                    {% if ligne.produit.marque %}
+                                                                        <br><small class="text-muted">{{ ligne.produit.marque }} {{ ligne.produit.modele }}</small>
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <span class="badge badge-primary">{{ ligne.quantite }}</span>
+                                                                </td>
+                                                                <td class="text-right">{{ ligne.prix_unitaire }}€</td>
+                                                                <td class="text-right"><strong class="text-success">{{ ligne.get_sous_total }}€</strong></td>
+                                                            </tr>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </tbody>
+                                                <tfoot class="bg-light">
+                                                    <tr>
+                                                        <th colspan="3" class="text-right font-weight-bold">Total de la commande</th>
+                                                        <th class="text-right">
+                                                            <span class="h5 text-success font-weight-bold">{{ commande.montant_total }}€</span>
+                                                        </th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    <i class="ion-ios-close mr-1"></i>Fermer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center" data-aos="fade-up">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body py-5">
+                            <div class="empty-state-icon mb-4">
+                                <i class="ion-ios-list-outline display-1 text-muted"></i>
+                            </div>
+                            <h3 class="text-muted mb-3">Aucune commande trouvée</h3>
+                            <p class="text-muted mb-4">
+                                {% if user.profil.est_vendeur %}
+                                    Vous n'avez reçu aucune commande pour le moment. Continuez à promouvoir vos produits pour attirer plus de clients !
+                                {% else %}
+                                    Vous n'avez effectué aucune commande. Découvrez notre sélection de véhicules de qualité !
+                                {% endif %}
+                            </p>
+                            <div class="d-flex justify-content-center">
+                                {% if user.profil.est_vendeur %}
+                                    <a href="{% url 'ecommerce:vendeur_produits' %}" class="btn btn-primary btn-lg mr-3">
+                                        <i class="ion-ios-plus mr-2"></i>Gérer mes produits
+                                    </a>
+                                    <a href="{% url 'ecommerce:vendeur_dashboard' %}" class="btn btn-outline-secondary btn-lg">
+                                        <i class="ion-ios-home mr-2"></i>Tableau de bord
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'ecommerce:car' %}" class="btn btn-primary btn-lg mr-3">
+                                        <i class="ion-ios-car mr-2"></i>Découvrir les véhicules
+                                    </a>
+                                    <a href="{% url 'ecommerce:index' %}" class="btn btn-outline-secondary btn-lg">
+                                        <i class="ion-ios-home mr-2"></i>Retour à l'accueil
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

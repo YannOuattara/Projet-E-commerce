@@ -1,0 +1,382 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{% if car.marque and car.modele %}{{ car.marque }} {{ car.modele }}{% else %}{{ car.nom }}{% endif %} - Mon Gba</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'ecommerce:index' %}">Mon<span>Gba</span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="oi oi-menu"></span> Menu
+        </button>
+        <div class="collapse navbar-collapse" id="ftco-nav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a href="{% url 'ecommerce:index' %}" class="nav-link">Accueil</a></li>
+            <li class="nav-item"><a href="{% url 'ecommerce:services' %}" class="nav-link">Services</a></li>
+            <li class="nav-item active"><a href="{% url 'ecommerce:car' %}" class="nav-link">Voitures</a></li>
+            {% if user.is_authenticated %}
+            {% if user.profil.est_client %}
+            <li class="nav-item"><a href="{% url 'ecommerce:profil_client' %}" class="nav-link">Profil</a></li>
+            {% endif %}
+            {% if user.profil.est_vendeur %}
+            <li class="nav-item"><a href="{% url 'ecommerce:profil_vendeur_prive' %}" class="nav-link">Profil</a></li>
+            {% endif %}
+            <li class="nav-item"><a href="{% url 'account_logout' %}" class="nav-link">Déconnexion</a></li>
+            {% else %}
+            <li class="nav-item"><a href="{% url 'account_login' %}" class="nav-link">Connexion</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- END nav -->
+    
+    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({% static 'images/bg_3.jpg' %});" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+          <div class="col-md-9 ftco-animate pb-5">
+            <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'ecommerce:car' %}">Car <i class="ion-ios-arrow-forward"></i></a></span> <span>Car details <i class="ion-ios-arrow-forward"></i></span></p>
+            <h1 class="mb-3 bread">Car Details</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ftco-section ftco-car-details">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-12">
+            <div class="car-details">
+              <div class="img rounded" style="background-image: url({% if car.image %}{{ car.image.url }}{% else %}{% static 'images/car-default.jpg' %}{% endif %});"></div>
+              <div class="text text-center">
+                <span class="subheading">{{ car.categorie.nom|default:"Général" }}</span>
+                <h2>{% if car.marque and car.modele %}{{ car.marque }} {{ car.modele }}{% else %}{{ car.nom }}{% endif %}</h2>
+                <p class="mb-2"><small class="text-muted">Vendu par : <strong>{{ car.vendeur.username }}</strong></small></p>
+                {% if car.annee_fabrication %}
+                <p class="mb-2"><small class="text-muted">Année : <strong>{{ car.annee_fabrication }}</strong></small></p>
+                {% endif %}
+                {% if car.etat %}
+                <p class="mb-2"><small class="text-muted">État : <strong>{{ car.get_etat_display }}</strong></small></p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md d-flex align-self-stretch ftco-animate">
+            <div class="media block-6 services">
+              <div class="media-body py-md-4">
+                <div class="d-flex mb-3 align-items-center">
+                  <div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-dashboard"></span></div>
+                  <div class="text">
+                    <h3 class="heading mb-0 pl-3">
+                      Kilométrage
+                      <span>{% if car.kilometrage %}{{ car.kilometrage }} km{% else %}N/A{% endif %}</span>
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md d-flex align-self-stretch ftco-animate">
+            <div class="media block-6 services">
+              <div class="media-body py-md-4">
+                <div class="d-flex mb-3 align-items-center">
+                  <div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-pistons"></span></div>
+                  <div class="text">
+                    <h3 class="heading mb-0 pl-3">
+                      Transmission
+                      <span>{% if car.transmission %}{{ car.get_transmission_display }}{% else %}N/A{% endif %}</span>
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md d-flex align-self-stretch ftco-animate">
+            <div class="media block-6 services">
+              <div class="media-body py-md-4">
+                <div class="d-flex mb-3 align-items-center">
+                  <div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-car-seat"></span></div>
+                  <div class="text">
+                    <h3 class="heading mb-0 pl-3">
+                      Places
+                      <span>{% if car.nombre_places %}{{ car.nombre_places }}{% else %}N/A{% endif %}</span>
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md d-flex align-self-stretch ftco-animate">
+            <div class="media block-6 services">
+              <div class="media-body py-md-4">
+                <div class="d-flex mb-3 align-items-center">
+                  <div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-backpack"></span></div>
+                  <div class="text">
+                    <h3 class="heading mb-0 pl-3">
+                      Portes
+                      <span>{% if car.nombre_portes %}{{ car.nombre_portes }}{% else %}N/A{% endif %}</span>
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md d-flex align-self-stretch ftco-animate">
+            <div class="media block-6 services">
+              <div class="media-body py-md-4">
+                <div class="d-flex mb-3 align-items-center">
+                  <div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-diesel"></span></div>
+                  <div class="text">
+                    <h3 class="heading mb-0 pl-3">
+                      Carburant
+                      <span>{% if car.carburant %}{{ car.get_carburant_display }}{% else %}N/A{% endif %}</span>
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>      
+          </div>
+        </div>
+        <!-- Les sections Features, Description, Review peuvent être dynamiques aussi si vous ajoutez des modèles correspondants -->
+        <div class="row">
+          <div class="col-md-12 pills">
+            <div class="bd-example bd-example-tabs">
+              <div class="d-flex justify-content-center">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="pills-description-tab" data-toggle="pill" href="#pills-description" role="tab" aria-controls="pills-description" aria-expanded="true">Equipements</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="pills-manufacturer-tab" data-toggle="pill" href="#pills-manufacturer" role="tab" aria-controls="pills-manufacturer" aria-expanded="true">Description</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="pills-reviews-tab" data-toggle="pill" href="#pills-reviews" role="tab" aria-controls="pills-reviews" aria-expanded="true">Avis ({{ total_reviews }})</a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-description" role="tabpanel" aria-labelledby="pills-description-tab">
+                  <div class="row">
+                    {% if car.equipements %}
+                      <div class="col-md-4">
+                        <ul class="features">
+                          {% for equipement in car.equipements|slice:":5" %}
+                            <li class="check"><span class="ion-ios-checkmark"></span>{{ equipement }}</li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% if car.equipements|length > 5 %}
+                        <div class="col-md-4">
+                          <ul class="features">
+                            {% for equipement in car.equipements|slice:"5:10" %}
+                              <li class="check"><span class="ion-ios-checkmark"></span>{{ equipement }}</li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      {% endif %}
+                      {% if car.equipements|length > 10 %}
+                        <div class="col-md-4">
+                          <ul class="features">
+                            {% for equipement in car.equipements|slice:"10:" %}
+                              <li class="check"><span class="ion-ios-checkmark"></span>{{ equipement }}</li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      {% endif %}
+                    {% else %}
+                      <div class="col-md-12">
+                        <p>Aucun équipement spécifié pour ce véhicule.</p>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="pills-manufacturer" role="tabpanel" aria-labelledby="pills-manufacturer-tab">
+                  <p>{% if car.description %}{{ car.description }}{% else %}Aucune description disponible.{% endif %}</p>
+                </div>
+
+                <div class="tab-pane fade" id="pills-reviews" role="tabpanel" aria-labelledby="pills-reviews-tab">
+                  <div class="row">
+                    <div class="col-md-12">
+                      {% if average_rating > 0 %}
+                        <div class="review-summary mb-4">
+                          <h4>Note moyenne : {{ average_rating }}/5 
+                            <span class="stars">
+                              {% for i in "12345"|make_list %}
+                                {% if forloop.counter <= average_rating %}
+                                  <i class="fa fa-star text-warning"></i>
+                                {% else %}
+                                  <i class="fa fa-star-o text-muted"></i>
+                                {% endif %}
+                              {% endfor %}
+                            </span>
+                          </h4>
+                          <p>Basé sur {{ total_reviews }} avis</p>
+                        </div>
+                      {% endif %}
+                      
+                      {% if user.is_authenticated and user.profil.est_client and can_review and not user_has_reviewed %}
+                        <div class="review-form mb-4">
+                          <h4>Laisser un avis</h4>
+                          <form method="post" action="{% url 'ecommerce:soumettre_avis' car.id %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                              <label for="note">Note :</label>
+                              <select name="note" id="note" class="form-control" required>
+                                <option value="">Choisir une note</option>
+                                <option value="5">5 étoiles - Excellent</option>
+                                <option value="4">4 étoiles - Très bien</option>
+                                <option value="3">3 étoiles - Bien</option>
+                                <option value="2">2 étoiles - Moyen</option>
+                                <option value="1">1 étoile - Mauvais</option>
+                              </select>
+                            </div>
+                            <div class="form-group">
+                              <label for="commentaire">Commentaire (optionnel) :</label>
+                              <textarea name="commentaire" id="commentaire" class="form-control" rows="3" placeholder="Partagez votre expérience avec ce produit..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Publier l'avis</button>
+                          </form>
+                        </div>
+                      {% elif user.is_authenticated and user.profil.est_client and user_has_reviewed %}
+                        <div class="alert alert-info">
+                          Vous avez déjà laissé un avis pour ce produit.
+                        </div>
+                      {% elif user.is_authenticated and user.profil.est_client and not can_review %}
+                        <div class="alert alert-warning">
+                          Vous devez avoir acheté ce produit et que votre commande soit confirmée pour laisser un avis.
+                        </div>
+                      {% elif not user.is_authenticated %}
+                        <div class="alert alert-info">
+                          <a href="{% url 'account_login' %}">Connectez-vous</a> pour laisser un avis.
+                        </div>
+                      {% endif %}
+                      
+                      <div class="reviews-list">
+                        {% if reviews %}
+                          {% for review in reviews %}
+                            <div class="review-item mb-3 p-3 border rounded">
+                              <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                  <strong>{{ review.utilisateur.username }}</strong>
+                                  <div class="stars mb-2">
+                                    {% for i in "12345"|make_list %}
+                                      {% if forloop.counter <= review.note %}
+                                        <i class="fa fa-star text-warning"></i>
+                                      {% else %}
+                                        <i class="fa fa-star-o text-muted"></i>
+                                      {% endif %}
+                                    {% endfor %}
+                                  </div>
+                                  {% if review.commentaire %}
+                                    <p>{{ review.commentaire }}</p>
+                                  {% endif %}
+                                </div>
+                                <small class="text-muted">{{ review.date_creation|date:"d/m/Y H:i" }}</small>
+                              </div>
+                            </div>
+                          {% endfor %}
+                        {% else %}
+                          <p class="text-muted">Aucun avis pour le moment. Soyez le premier à donner votre avis !</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section Related Cars (à rendre dynamique si souhaité) -->
+    <section class="ftco-section ftco-no-pt">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-12 heading-section text-center ftco-animate mb-5">
+            <span class="subheading">Choisissez un véhicule</span>
+            <h2 class="mb-2">Véhicules similaires</h2>
+          </div>
+        </div>
+        <div class="row">
+          {% for related_car in car.categorie.produits.all|slice:":3" %}
+            {% if related_car.id != car.id and related_car.disponible %}
+              <div class="col-md-4">
+                <div class="car-wrap rounded ftco-animate">
+                  <div class="img rounded d-flex align-items-end" style="background-image: url({% if related_car.image %}{{ related_car.image.url }}{% else %}{% static 'images/car-default.jpg' %}{% endif %});"></div>
+                  <div class="text">
+                    <h2 class="mb-0"><a href="{% url 'ecommerce:car_single' related_car.id %}">{% if related_car.marque and related_car.modele %}{{ related_car.marque }} {{ related_car.modele }}{% else %}{{ related_car.nom }}{% endif %}</a></h2>
+                    <div class="d-flex mb-3">
+                      <span class="cat">{{ related_car.categorie.nom|default:"Général" }}</span>
+                      <p class="price ml-auto">{{ related_car.prix }}€</p>
+                    </div>
+                    <p class="mb-2"><small class="text-muted">Vendu par : <strong>{% if related_car.vendeur.profil.est_vendeur %}<a href="{% url 'ecommerce:profil_vendeur' related_car.vendeur.username %}">{{ related_car.vendeur.username }}</a>{% else %}{{ related_car.vendeur.username }}{% endif %}</strong></small></p>
+                    <p class="d-flex mb-0 d-block">
+                      {% if user.is_authenticated and user.profil.est_client %}
+                      <a href="{% url 'ecommerce:ajouter_au_panier' related_car.id %}" class="btn btn-primary py-2 mr-1">Ajouter panier</a>
+                      {% endif %}
+                      <a href="{% url 'ecommerce:car_single' related_car.id %}" class="btn btn-secondary py-2 ml-1">Details</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% empty %}
+            <p>Aucune voiture correspondante disponible.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <footer class="ftco-footer ftco-bg-dark ftco-section">
+      <!-- Footer reste inchangé -->
+    </footer>
+
+    <!-- Scripts restent inchangés -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'js/aos.js' %}"></script>
+    <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
+    <script src="{% static 'js/scrollax.min.js' %}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="{% static 'js/google-map.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
+</html>

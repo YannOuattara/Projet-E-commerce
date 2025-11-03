@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Confirmation d'email - Mon Gba{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6" data-aos="fade-up" data-aos-duration="1000">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0 text-center">Confirmation d'email</h4>
+                    </div>
+                    <div class="card-body">
+                        {% if confirmation %}
+                            <p class="text-center">Veuillez confirmer votre adresse email en cliquant sur le lien dans l'email que vous avez reçu.</p>
+                        {% else %}
+                            {% if can_confirm %}
+                                <form method="post" action="{% url 'account_confirm_email' key=confirmation.key %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary btn-block">Confirmer l'email</button>
+                                </form>
+                            {% else %}
+                                <p class="text-center text-danger">Le lien de confirmation est invalide ou a expiré.</p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

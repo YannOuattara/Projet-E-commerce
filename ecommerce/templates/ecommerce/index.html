@@ -1,0 +1,469 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MonGba - Free Bootstrap 4 Template by Colorlib</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
+
+    
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+    
+	  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	    <div class="container">
+	      <a class="navbar-brand" href="{% url 'ecommerce:index' %}">Mon<span>Gba</span></a>
+	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
+
+	      <div class="collapse navbar-collapse" id="ftco-nav">
+	        <ul class="navbar-nav ml-auto">
+	          <li class="nav-item active"><a href="{% url 'ecommerce:index' %}" class="nav-link">Accueil</a></li>
+	          <li class="nav-item"><a href="{% url 'ecommerce:services' %}" class="nav-link">Services</a></li>
+	          <li class="nav-item"><a href="{% url 'ecommerce:car' %}" class="nav-link">Voitures</a></li>
+	          {% if user.is_authenticated %}
+	          {% if user.profil.est_client %}
+	          <li class="nav-item"><a href="{% url 'ecommerce:profil_client' %}" class="nav-link">Profil</a></li>
+	          {% endif %}
+	          {% if user.profil.est_vendeur %}
+	          <li class="nav-item"><a href="{% url 'ecommerce:profil_vendeur_prive' %}" class="nav-link">Profil</a></li>
+	          {% endif %}
+	          <li class="nav-item"><a href="{% url 'account_logout' %}" class="nav-link">Déconnexion</a></li>
+	          {% else %}
+	          <li class="nav-item"><a href="{% url 'account_login' %}" class="nav-link">Connexion</a></li>
+	          {% endif %}
+	        </ul>
+	      </div>
+	    </div>
+	  </nav>
+    <!-- END nav -->
+    
+    <div class="hero-wrap ftco-degree-bg" style="background-image: url({% static 'images/bg_1.jpg' %});" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
+          <div class="col-lg-8 ftco-animate">
+          	<div class="text w-100 text-center mb-md-5 pb-md-5">
+	            <h1 class="mb-4">Facilité &amp; Rapidité dans l'achat d'un véhicule</h1>
+	            <p style="font-size: 18px;">Un vaste réseau de concessionnaires s'étend à travers le pays et vous offre les meilleures opportunités. C'est un marché automobile exceptionnel, où les modèles premium</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row no-gutters">
+    			<div class="col-md-12	featured-top">
+    				<div class="row no-gutters">
+	  					<div class="col-md-4 d-flex align-items-center">
+	  						<form action="#" class="request-form ftco-animate bg-primary">
+		          		<h2>Make your trip</h2>
+			    				<div class="form-group">
+			    					<label for="" class="label">Pick-up location</label>
+			    					<input type="text" class="form-control" placeholder="City, Airport, Station, etc">
+			    				</div>
+			    				<div class="form-group">
+			    					<label for="" class="label">Drop-off location</label>
+			    					<input type="text" class="form-control" placeholder="City, Airport, Station, etc">
+			    				</div>
+			    				<div class="d-flex">
+			    					<div class="form-group mr-2">
+			                <label for="" class="label">Pick-up date</label>
+			                <input type="text" class="form-control" id="book_pick_date" placeholder="Date">
+			              </div>
+			              <div class="form-group ml-2">
+			                <label for="" class="label">Drop-off date</label>
+			                <input type="text" class="form-control" id="book_off_date" placeholder="Date">
+			              </div>
+		              </div>
+		              <div class="form-group">
+		                <label for="" class="label">Pick-up time</label>
+		                <input type="text" class="form-control" id="time_pick" placeholder="Time">
+		              </div>
+			            <div class="form-group">
+			              <input type="submit" value="Rent A Car Now" class="btn btn-secondary py-3 px-4">
+			            </div>
+			    			</form>
+	  					</div>
+	  					<div class="col-md-8 d-flex align-items-center">
+	  						<div class="services-wrap rounded-right w-100">
+	  							<h3 class="heading-section mb-4">La meilleure façon d'acquérir votre voiture parfaite</h3>
+	  							<div class="row d-flex mb-4">
+					          <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-route"></span></div>
+				              	<div class="text w-100">
+					                <h3 class="heading mb-2">Choisissez votre véhicule</h3>
+				                </div>
+					            </div>      
+					          </div>
+					          <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-handshake"></span></div>
+				              	<div class="text w-100">
+					                <h3 class="heading mb-2">Sélectionnez la meilleure offre</h3>
+					              </div>
+					            </div>      
+					          </div>
+					          <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+					            <div class="services w-100 text-center">
+				              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-rent"></span></div>
+				              	<div class="text w-100">
+					                <h3 class="heading mb-2">Acheter votre véhicule</h3>
+					              </div>
+					            </div>      
+					          </div>
+					        </div>
+					        <p><a href="{% url 'ecommerce:car' %}" class="btn btn-primary py-3 px-4">Commander votre véhicule</a></p>
+	  						</div>
+	  					</div>
+	  				</div>
+				</div>
+  		</div>
+    </section>
+
+
+
+
+    <section class="ftco-section ftco-no-pt bg-light">
+      <div class="container">
+          <div class="row justify-content-center">
+              <div class="col-md-12 heading-section text-center ftco-animate mb-5">
+                  <span class="subheading">Ce que nous offrons</span>
+                  <h2 class="mb-2">Véhicules</h2>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="carousel-car owl-carousel">
+                      {% for car in featured_cars %}
+                      <div class="item">
+                          <div class="car-wrap rounded ftco-animate">
+                              <div class="img rounded d-flex align-items-end" style="background-image: url('{{ car.image.url }}');"></div>
+                              <div class="text">
+                                  <h2 class="mb-0"><a href="{% url 'ecommerce:car_single' car.id %}">{{ car.nom }}</a></h2>
+                                  <div class="d-flex mb-3">
+                                      <span class="cat">{{ car.categorie.nom|default:"Général" }}</span>
+                                      <p class="price ml-auto">{{ car.prix }}€</p>
+                                  </div>
+                                  <p class="mb-2"><small class="text-muted">Vendu par : <strong>{{ car.vendeur.username }}</strong></small></p>
+                                  <p class="d-flex mb-0 d-block">
+                                      {% if user.is_authenticated and user.profil.est_client %}
+                                      <a href="{% url 'ecommerce:ajouter_au_panier' car.id %}" class="btn btn-primary py-2 mr-1">Ajouter panier</a>
+                                      {% endif %}
+                                      <a href="{% url 'ecommerce:car_single' car.id %}" class="btn btn-secondary py-2 ml-1">Details</a>
+                                  </p>
+                              </div>
+                          </div>
+                      </div>
+                      {% empty %}
+                      <p>Aucune voiture disponible pour le moment.</p>
+                      {% endfor %}
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+    <section class="ftco-section ftco-about">
+			<div class="container">
+				<div class="row no-gutters">
+					<div class="col-md-6 p-md-5 img img-2 d-flex justify-content-center align-items-center" style="background-image: url({% static 'images/about.jpg' %});">
+					</div>
+					<div class="col-md-6 wrap-about ftco-animate">
+	          <div class="heading-section heading-section-white pl-md-5">
+	          	<span class="subheading">A propos de nous</span>
+	            <h2 class="mb-4">Bienvenue sur MonGba</h2>
+
+	            <p>Depuis notre création, Mon Gba s'est imposé comme votre partenaire de confiance dans l'univers automobile. Notre mission est de vous offrir un accès simple et transparent aux meilleures voitures du marché.</p>
+	            <p>Nous comprenons que l'achat d'une voiture est une décision importante. C'est pourquoi notre équipe d'experts passionnés travaille sans relâche pour vous proposer une sélection rigoureuse de véhicules de qualité, adaptés à tous les budgets et tous les besoins.</p>
+	            <p>Chez Mon Gba, nous croyons en la transparence totale, un service client exceptionnel et des prix compétitifs. Chaque véhicule de notre catalogue est soigneusement inspecté pour garantir votre satisfaction et votre sécurité sur la route.</p>
+	            <p><a href="{% url 'ecommerce:car' %}" class="btn btn-primary py-3 px-4">Voir les voitures</a></p>
+	          </div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="ftco-section">
+			<div class="container">
+				<div class="row justify-content-center mb-5">
+          <div class="col-md-7 text-center heading-section ftco-animate">
+          	<span class="subheading">Services</span>
+            <h2 class="mb-3">Nos Derniers Services</h2>
+          </div>
+        </div>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="services services-2 w-100 text-center">
+            	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-wedding-car"></span></div>
+            	<div class="text w-100">
+                <h3 class="heading mb-2">Véhicules de Mariage</h3>
+                <p>Célébrez votre grand jour avec élégance grâce à notre sélection de voitures prestigieuses pour mariages et événements spéciaux.</p>
+              </div>
+            </div>
+					</div>
+					<div class="col-md-3">
+						<div class="services services-2 w-100 text-center">
+            	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-transportation"></span></div>
+            	<div class="text w-100">
+                <h3 class="heading mb-2">Transfert en Ville</h3>
+                <p>Déplacez-vous en toute sérénité dans la ville avec nos véhicules confortables et nos chauffeurs professionnels disponibles 24h/24.</p>
+              </div>
+            </div>
+					</div>
+					<div class="col-md-3">
+						<div class="services services-2 w-100 text-center">
+            	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-car"></span></div>
+            	<div class="text w-100">
+                <h3 class="heading mb-2">Transfert Aéroport</h3>
+                <p>Voyagez sans stress avec notre service de transfert aéroport ponctuel et fiable pour tous vos déplacements professionnels ou personnels.</p>
+              </div>
+            </div>
+					</div>
+					<div class="col-md-3">
+						<div class="services services-2 w-100 text-center">
+            	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-transportation"></span></div>
+            	<div class="text w-100">
+                <h3 class="heading mb-2">Tour de la Ville</h3>
+                <p>Découvrez la ville à votre rythme avec nos véhicules équipés et nos circuits personnalisés pour une expérience inoubliable.</p>
+              </div>
+            </div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="ftco-section ftco-intro" style="background-image: url({% static 'images/bg_3.jpg' %});">
+			<div class="overlay"></div>
+			<div class="container">
+				<div class="row justify-content-end">
+					<div class="col-md-6 heading-section heading-section-white ftco-animate">
+            <h2 class="mb-3">Vous voulez avoir les bons véhicules avec nous ? Ne tardez plus.</h2>
+            <a href="{% url 'ecommerce:car' %}" class="btn btn-primary btn-lg">Commander</a>
+          </div>
+				</div>
+			</div>
+		</section>
+
+
+    <section class="ftco-section testimony-section bg-light">
+      <div class="container">
+        <div class="row justify-content-center mb-5">
+          <div class="col-md-7 text-center heading-section ftco-animate">
+          	<span class="subheading">Témoignages</span>
+            <h2 class="mb-3">Clients Satisfaits</h2>
+          </div>
+        </div>
+        <div class="row ftco-animate">
+          <div class="col-md-12">
+            <div class="carousel-testimony owl-carousel ftco-owl">
+              <div class="item">
+                <div class="testimony-wrap rounded text-center py-4 pb-5">
+                  <div class="user-img mb-2" style="background-image: url({% static 'images/person_1.jpg' %})">
+                  </div>
+                  <div class="text pt-4">
+                    <p class="mb-4">Excellente expérience avec Mon Gba ! J'ai trouvé la voiture parfaite pour ma famille. Le service client est irréprochable et les prix très compétitifs.</p>
+                    <p class="name">Kouassi Jean</p>
+                    <span class="position">Chef d'Entreprise</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="testimony-wrap rounded text-center py-4 pb-5">
+                  <div class="user-img mb-2" style="background-image: url({% static 'images/person_2.jpg' %})">
+                  </div>
+                  <div class="text pt-4">
+                    <p class="mb-4">Je recommande vivement Mon Gba ! Processus d'achat simple et transparent. L'équipe m'a accompagné du début à la fin avec professionnalisme.</p>
+                    <p class="name">Amin Traoré</p>
+                    <span class="position">Consultant</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="testimony-wrap rounded text-center py-4 pb-5">
+                  <div class="user-img mb-2" style="background-image: url({% static 'images/person_3.jpg' %})">
+                  </div>
+                  <div class="text pt-4">
+                    <p class="mb-4">Meilleur rapport qualité-prix du marché ! Mon Gba m'a aidé à trouver une voiture fiable et performante adaptée à mon budget. Service impeccable.</p>
+                    <p class="name">Yao Patrick</p>
+                    <span class="position">Ingénieur</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="testimony-wrap rounded text-center py-4 pb-5">
+                  <div class="user-img mb-2" style="background-image: url({% static 'images/person_1.jpg' %})">
+                  </div>
+                  <div class="text pt-4">
+                    <p class="mb-4">Une équipe à l'écoute et des véhicules de qualité. Mon Gba a dépassé mes attentes. Je suis ravi de mon achat et recommande sans hésitation.</p>
+                    <p class="name">Franck Diabaté</p>
+                    <span class="position">Médecin</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="testimony-wrap rounded text-center py-4 pb-5">
+                  <div class="user-img mb-2" style="background-image: url({% static 'images/person_1.jpg' %})">
+                  </div>
+                  <div class="text pt-4">
+                    <p class="mb-4">Transaction rapide et sécurisée. Mon Gba propose un large choix de véhicules et un accompagnement personnalisé. Très satisfait de mon expérience.</p>
+                    <p class="name">Koffi Michel</p>
+                    <span class="position">Commerçant</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+	
+
+    <section class="ftco-counter ftco-section img bg-light" id="section-counter">
+			<div class="overlay"></div>
+    	<div class="container">
+    		<div class="row">
+          <div class="col-md-6 col-lg-3 justify-content-center counter-wrap ftco-animate">
+            <div class="block-18">
+              <div class="text text-border d-flex align-items-center">
+                <strong class="number" data-number="05">0</strong>
+                <span>Ans <br>d'expérience</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 justify-content-center counter-wrap ftco-animate">
+            <div class="block-18">
+              <div class="text text-border d-flex align-items-center">
+                <strong class="number" data-number="+1000">0</strong>
+                <span>Voitures <br>au total</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 justify-content-center counter-wrap ftco-animate">
+            <div class="block-18">
+              <div class="text text-border d-flex align-items-center">
+                <strong class="number" data-number="+200">0</strong>
+                <span>Acheteurs <br>joyeux</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 justify-content-center counter-wrap ftco-animate">
+            <div class="block-18">
+              <div class="text d-flex align-items-center">
+                <strong class="number" data-number="67">0</strong>
+                <span>Branches <br>totales</span>
+              </div>
+            </div>
+          </div>
+        </div>
+    	</div>
+    </section>	
+
+    <footer class="ftco-footer ftco-bg-dark ftco-section">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-md">
+            <div class="ftco-footer-widget mb-4">
+              <h2 class="ftco-heading-2"><a href="#" class="logo">Mon<span>Gba</span></a></h2>
+              <p>Votre partenaire de confiance pour trouver la voiture de vos rêves au meilleur prix, avec un service personnalisé et professionnel.</p>
+              <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="ftco-footer-widget mb-4 ml-md-5">
+              <h2 class="ftco-heading-2">Information</h2>
+              <ul class="list-unstyled">
+                <li><a href="#" class="py-2 d-block">About</a></li>
+                <li><a href="#" class="py-2 d-block">Services</a></li>
+                <li><a href="#" class="py-2 d-block">Term and Conditions</a></li>
+                <li><a href="#" class="py-2 d-block">Best Price Guarantee</a></li>
+                <li><a href="#" class="py-2 d-block">Privacy &amp; Cookies Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md">
+             <div class="ftco-footer-widget mb-4">
+              <h2 class="ftco-heading-2">Customer Support</h2>
+              <ul class="list-unstyled">
+                <li><a href="#" class="py-2 d-block">FAQ</a></li>
+                <li><a href="#" class="py-2 d-block">Payment Option</a></li>
+                <li><a href="#" class="py-2 d-block">Booking Tips</a></li>
+                <li><a href="#" class="py-2 d-block">How it works</a></li>
+                <li><a href="#" class="py-2 d-block">Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="ftco-footer-widget mb-4">
+            	<h2 class="ftco-heading-2">Have a Questions?</h2>
+            	<div class="block-23 mb-3">
+	              <ul>
+	                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+	              </ul>
+	            </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </footer>
+    
+  
+
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+  <script src="{% static 'js/aos.js' %}"></script>
+  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+  <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
+  <script src="{% static 'js/scrollax.min.js' %}"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="{% static 'js/google-map.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+    
+  </body>
+</html>
