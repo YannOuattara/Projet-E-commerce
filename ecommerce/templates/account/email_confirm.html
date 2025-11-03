@@ -15,9 +15,8 @@
                     </div>
                     <div class="card-body">
                         {% if confirmation %}
-                            <p class="text-center">Veuillez confirmer votre adresse email en cliquant sur le lien dans l'email que vous avez reçu.</p>
-                        {% else %}
                             {% if can_confirm %}
+                                <p class="text-center">Cliquez sur le bouton ci-dessous pour confirmer votre adresse email.</p>
                                 <form method="post" action="{% url 'account_confirm_email' key=confirmation.key %}">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-primary btn-block">Confirmer l'email</button>
@@ -25,6 +24,8 @@
                             {% else %}
                                 <p class="text-center text-danger">Le lien de confirmation est invalide ou a expiré.</p>
                             {% endif %}
+                        {% else %}
+                            <p class="text-center">Veuillez confirmer votre adresse email en cliquant sur le lien dans l'email que vous avez reçu.</p>
                         {% endif %}
                     </div>
                 </div>

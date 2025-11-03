@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'ecommerce',
     'jazzmin',
 
@@ -147,6 +148,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Site configuration
+SITE_ID = 1
 
 # Pour crispy forms avec bootstrap 5
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

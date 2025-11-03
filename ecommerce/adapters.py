@@ -1,5 +1,7 @@
 from allauth.account.adapter import DefaultAccountAdapter
 from django.conf import settings
+from django.contrib.sites.models import Site
+from django.urls import reverse
 
 
 class CustomAccountAdapter(DefaultAccountAdapter):
@@ -24,14 +26,14 @@ class CustomAccountAdapter(DefaultAccountAdapter):
                 elif request.user.profil.est_client():
                     return '/car/'  # Correction : pas de /ecommerce/
         return '/'
-    
+
     def send_mail(self, template_prefix, email, context):
-        """Envoie les emails de confirmation"""
-        # Ajouter l'URL d'activation seulement si la clé existe (pour les emails de confirmation)
+        """Envoie les emails de confirmation avec URL d'activation correcte"""
         if 'key' in context:
-            context['activate_url'] = (
-                f"{settings.FRONTEND_URL if hasattr(settings, 'FRONTEND_URL') else ''}"
-                f"/accounts/confirm-email/{context['key']}/"
-            )
+            # Construire l'URL d'activation avec le domaine du site
+            site = Site.objects.get_current()
+            protocol = 'https' if settings.SECURE_SSL_REDIRECT else 'http'
+            activate_url = f"{protocol}://{site.domain}{reverse('account_confirm_email', kwargs={'key': context['key']})}"
+            context['activate_url'] = activate_url
         super().send_mail(template_prefix, email, context)
 
