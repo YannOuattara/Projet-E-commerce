@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mes Produits - Mon Gba{% endblock %}
+
+{% block hero %}
+<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({% static 'images/bg_3.jpg' %});" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+      <div class="col-md-9 ftco-animate pb-5">
+        <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'ecommerce:profil_vendeur_prive' %}">Profil <i class="ion-ios-arrow-forward"></i></a></span> <span>Produits <i class="ion-ios-arrow-forward"></i></span></p>
+        <h1 class="mb-3 bread">Mes Produits</h1>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
+                <h1 class="heading-section">Mes Produits</h1>
+                <a href="{% url 'ecommerce:vendeur_creer_produit' %}" class="btn btn-primary">Créer un nouveau produit</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                {% if produits %}
+                    <div class="table-responsive" data-aos="fade-up" data-aos-delay="200">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Prix</th>
+                                    <th>Stock</th>
+                                    <th>Disponible</th>
+                                    <th>Catégorie</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for produit in produits %}
+                                <tr>
+                                    <td>
+                                        {% if produit.image %}
+                                            <img src="{{ produit.image.url }}" alt="{{ produit.nom }}" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                        {% endif %}
+                                        {{ produit.nom }}
+                                    </td>
+                                    <td>{{ produit.prix }} €</td>
+                                    <td>{{ produit.stock }}</td>
+                                    <td>
+                                        {% if produit.disponible %}
+                                            <span class="badge badge-success">Oui</span>
+                                        {% else %}
+                                            <span class="badge badge-danger">Non</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ produit.categorie.nom|default:"-" }}</td>
+                                    <td>{{ produit.date_creation|date:"d/m/Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'ecommerce:vendeur_modifier_produit' produit.id %}" class="btn btn-sm btn-warning">Modifier</a>
+                                        <a href="{% url 'ecommerce:vendeur_supprimer_produit' produit.id %}" class="btn btn-sm btn-danger">Supprimer</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info text-center" data-aos="fade-up" data-aos-delay="200">
+                        Vous n'avez aucun produit. <a href="{% url 'ecommerce:vendeur_creer_produit' %}" class="btn btn-primary ml-2">Créer votre premier produit</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

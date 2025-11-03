@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Modifier le Produit - Mon Gba{% endblock %}
+
+{% block hero %}
+<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({% static 'images/bg_3.jpg' %});" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+      <div class="col-md-9 ftco-animate pb-5">
+        <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'ecommerce:index' %}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Espace Vendeur <i class="ion-ios-arrow-forward"></i></span></p>
+        <h1 class="mb-3 bread">Modifier le Produit</h1>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8" data-aos="fade-up" data-aos-duration="1000">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h4 class="mb-0">Modifier le produit</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <div class="form-group">
+                                <label for="nom">Nom du produit *</label>
+                                <input type="text" class="form-control" id="nom" name="nom" value="{{ produit.nom }}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Description *</label>
+                                <textarea class="form-control" id="description" name="description" rows="4" required>{{ produit.description }}</textarea>
+                            </div>
+
+                            <h5 class="mt-4 mb-3">Informations sur le véhicule</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="marque">Marque</label>
+                                        <input type="text" class="form-control" id="marque" name="marque" value="{{ produit.marque }}" placeholder="Ex: Peugeot, Renault, BMW...">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="modele">Modèle</label>
+                                        <input type="text" class="form-control" id="modele" name="modele" value="{{ produit.modele }}" placeholder="Ex: 208, Clio, X3...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="annee_fabrication">Année de fabrication</label>
+                                        <input type="number" class="form-control" id="annee_fabrication" name="annee_fabrication" value="{{ produit.annee_fabrication }}" min="1900" max="2030" placeholder="Ex: 2020">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="kilometrage">Kilométrage</label>
+                                        <input type="number" class="form-control" id="kilometrage" name="kilometrage" value="{{ produit.kilometrage }}" placeholder="Ex: 50000">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="carburant">Carburant</label>
+                                        <select class="form-control" id="carburant" name="carburant">
+                                            <option value="">-- Sélectionner --</option>
+                                            <option value="essence" {% if produit.carburant == "essence" %}selected{% endif %}>Essence</option>
+                                            <option value="diesel" {% if produit.carburant == "diesel" %}selected{% endif %}>Diesel</option>
+                                            <option value="electrique" {% if produit.carburant == "electrique" %}selected{% endif %}>Électrique</option>
+                                            <option value="hybride" {% if produit.carburant == "hybride" %}selected{% endif %}>Hybride</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="transmission">Transmission</label>
+                                        <select class="form-control" id="transmission" name="transmission">
+                                            <option value="">-- Sélectionner --</option>
+                                            <option value="manuelle" {% if produit.transmission == "manuelle" %}selected{% endif %}>Manuelle</option>
+                                            <option value="automatique" {% if produit.transmission == "automatique" %}selected{% endif %}>Automatique</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="nombre_portes">Nombre de portes</label>
+                                        <input type="number" class="form-control" id="nombre_portes" name="nombre_portes" value="{{ produit.nombre_portes }}" min="1" max="10">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="nombre_places">Nombre de places</label>
+                                        <input type="number" class="form-control" id="nombre_places" name="nombre_places" value="{{ produit.nombre_places }}" min="1" max="20">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="etat">État</label>
+                                        <select class="form-control" id="etat" name="etat">
+                                            <option value="">-- Sélectionner --</option>
+                                            <option value="neuf" {% if produit.etat == "neuf" %}selected{% endif %}>Neuf</option>
+                                            <option value="occasion" {% if produit.etat == "occasion" %}selected{% endif %}>Occasion</option>
+                                            <option value="reconditionne" {% if produit.etat == "reconditionne" %}selected{% endif %}>Reconditionné</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="equipements">Équipements (séparés par des virgules)</label>
+                                <textarea class="form-control" id="equipements" name="equipements" rows="3" placeholder="Ex: Climatisation, GPS, caméra de recul, Bluetooth...">{% if produit.equipements %}{% for equipement in produit.equipements %}{% if not forloop.first %}, {% endif %}{{ equipement }}{% endfor %}{% endif %}</textarea>
+                                <small class="form-text text-muted">Listez les équipements séparés par des virgules</small>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="prix">Prix (€) *</label>
+                                        <input type="number" step="0.01" class="form-control" id="prix" name="prix" value="{{ produit.prix }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="stock">Stock *</label>
+                                        <input type="number" class="form-control" id="stock" name="stock" value="{{ produit.stock }}" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="categorie">Catégorie</label>
+                                <select class="form-control" id="categorie" name="categorie">
+                                    <option value="">-- Sélectionner une catégorie --</option>
+                                    {% for categorie in categories %}
+                                        <option value="{{ categorie.id }}" {% if produit.categorie.id == categorie.id %}selected{% endif %}>{{ categorie.nom }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Étiquettes</label>
+                                <div class="row">
+                                    {% for etiquette in etiquettes %}
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="etiquettes" value="{{ etiquette.id }}" id="etiquette_{{ etiquette.id }}"
+                                                    {% if etiquette in etiquettes_selectionnees %}checked{% endif %}>
+                                                <label class="form-check-label" for="etiquette_{{ etiquette.id }}">
+                                                    {{ etiquette.nom }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="image">Image du produit</label>
+                                {% if produit.image %}
+                                    <div class="mb-2">
+                                        <img src="{{ produit.image.url }}" alt="{{ produit.nom }}" class="img-thumbnail" style="max-width: 200px;">
+                                        <p class="text-muted">Image actuelle</p>
+                                    </div>
+                                {% endif %}
+                                <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
+                                <small class="form-text text-muted">Laisser vide pour garder l'image actuelle</small>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="disponible" name="disponible" {% if produit.disponible %}checked{% endif %}>
+                                <label class="form-check-label" for="disponible">
+                                    Produit disponible
+                                </label>
+                            </div>
+
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn btn-warning btn-lg mr-2">Enregistrer les modifications</button>
+                                <a href="{% url 'ecommerce:vendeur_produits' %}" class="btn btn-secondary btn-lg">Annuler</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

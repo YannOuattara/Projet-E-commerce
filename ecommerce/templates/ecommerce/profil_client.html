@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mon Profil - Mon Gba{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
+                <h2 class="heading-section">Mon Espace Client</h2>
+                <p class="mb-0">Bienvenue {{ user.get_full_name|default:user.username }}, gérez vos achats et vos préférences</p>
+            </div>
+        </div>
+
+        <!-- Informations du profil -->
+        <div class="row mb-5" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="icon icon-user"></i> Mes Informations</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Nom d'utilisateur:</strong> {{ user.username }}</p>
+                                <p><strong>Email:</strong> {{ user.email }}</p>
+                                {% if user.first_name or user.last_name %}
+                                    <p><strong>Nom complet:</strong> {{ user.get_full_name }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {% if user.profil.telephone %}
+                                    <p><strong>Téléphone:</strong> {{ user.profil.telephone }}</p>
+                                {% endif %}
+                                {% if user.profil.adresse %}
+                                    <p><strong>Adresse:</strong> {{ user.profil.adresse }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions principales -->
+        <div class="row" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="icon icon-shopping-cart" style="font-size: 3rem; color: #007bff;"></i>
+                        <h5 class="card-title mt-3">Mon Panier</h5>
+                        <p class="card-text">Consultez et gérez les articles dans votre panier</p>
+                        <a href="{% url 'ecommerce:panier' %}" class="btn btn-primary">Voir mon panier</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="icon icon-list" style="font-size: 3rem; color: #28a745;"></i>
+                        <h5 class="card-title mt-3">Mes Commandes</h5>
+                        <p class="card-text">Historique complet de vos achats et commandes</p>
+                        <a href="{% url 'ecommerce:mes_commandes' %}" class="btn btn-success">Voir mes commandes</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="icon icon-heart" style="font-size: 3rem; color: #dc3545;"></i>
+                        <h5 class="card-title mt-3">Mes Favoris</h5>
+                        <p class="card-text">Vos véhicules préférés sauvegardés</p>
+                        <a href="{% url 'ecommerce:mes_favoris' %}" class="btn btn-danger">Voir mes favoris</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="icon icon-star" style="font-size: 3rem; color: #ffc107;"></i>
+                        <h5 class="card-title mt-3">Mes Avis</h5>
+                        <p class="card-text">Vos commentaires et évaluations</p>
+                        <a href="{% url 'ecommerce:mes_avis' %}" class="btn btn-warning">Voir mes avis</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Avis -->
+        <div id="reviews-section" class="row mt-5" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="800">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="icon icon-star"></i> Mes Avis ({{ reviews|length }})</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if reviews %}
+                            <div class="reviews-list">
+                                {% for review in reviews %}
+                                    <div class="review-item mb-4 p-3 border rounded">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6 class="mb-1">
+                                                <a href="{% url 'ecommerce:car_single' review.produit.id %}" class="text-decoration-none">
+                                                    {{ review.produit.nom }}
+                                                </a>
+                                            </h6>
+                                            <small class="text-muted">{{ review.date_creation|date:"d/m/Y H:i" }}</small>
+                                        </div>
+                                        <div class="stars mb-2">
+                                            {% for i in "12345"|make_list %}
+                                                {% if forloop.counter <= review.note %}
+                                                    <i class="fa fa-star text-warning"></i>
+                                                {% else %}
+                                                    <i class="fa fa-star-o text-muted"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                            <span class="ml-2">{{ review.note }}/5</span>
+                                        </div>
+                                        {% if review.commentaire %}
+                                            <p class="mb-0">{{ review.commentaire }}</p>
+                                        {% else %}
+                                            <p class="text-muted mb-0">Aucun commentaire</p>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="icon icon-star" style="font-size: 3rem; color: #dee2e6;"></i>
+                                <h5 class="mt-3 text-muted">Aucun avis laissé</h5>
+                                <p class="text-muted">Vous n'avez pas encore laissé d'avis sur vos achats.</p>
+                                <a href="{% url 'ecommerce:car' %}" class="btn btn-primary">Explorer les véhicules</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques rapides -->
+        <div class="row mt-5" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="600">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="icon icon-bar-chart"></i> Mes Statistiques</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <h3 class="text-primary">{{ total_commandes }}</h3>
+                                <p class="mb-0">Commandes passées</p>
+                            </div>
+                            <div class="col-md-3">
+                                <h3 class="text-success">{{ total_depense|floatformat:2 }} €</h3>
+                                <p class="mb-0">Total dépensé</p>
+                            </div>
+                            <div class="col-md-3">
+                                <h3 class="text-warning">{{ elements_panier|length }}</h3>
+                                <p class="mb-0">Articles dans le panier</p>
+                            </div>
+                            <div class="col-md-3">
+                                <h3 class="text-info">{{ reviews|length }}</h3>
+                                <p class="mb-0">Avis laissés</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

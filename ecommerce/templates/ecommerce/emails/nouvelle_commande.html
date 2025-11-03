@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle commande - MonGba</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: white;
+            margin: 20px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #007bff;
+        }
+        .header h1 {
+            color: #007bff;
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .commande-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .client-info {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .btn:hover {
+            background-color: #218838;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .produits {
+            margin: 20px 0;
+        }
+        .produit-item {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛒 Nouvelle commande reçue</h1>
+            <p>Une nouvelle commande nécessite votre attention</p>
+        </div>
+
+        <div class="content">
+            <p>Bonjour <strong>{{ vendeur.username }}</strong>,</p>
+
+            <p>Une nouvelle commande vient d'être passée sur votre plateforme MonGba. Vous devez la valider ou la refuser pour finaliser le processus.</p>
+
+            <div class="commande-info">
+                <h3>📋 Détails de la commande</h3>
+                <p><strong>Numéro de commande :</strong> {{ commande.numero_commande }}</p>
+                <p><strong>Date :</strong> {{ commande.date_commande|date:"d/m/Y à H:i" }}</p>
+                <p><strong>Montant total :</strong> {{ commande.montant_total }}€</p>
+                <p><strong>Adresse de livraison :</strong> {{ commande.adresse_livraison }}</p>
+            </div>
+
+            <div class="client-info">
+                <h4>👤 Informations client</h4>
+                <p><strong>Nom :</strong> {{ client.username }}</p>
+                <p><strong>Email :</strong> {{ client.email }}</p>
+                <p><strong>Téléphone :</strong> {{ commande.telephone }}</p>
+            </div>
+
+            <div class="produits">
+                <h4>🚗 Produits commandés</h4>
+                {% for ligne in commande.lignes_commande.all %}
+                    {% if ligne.produit.vendeur == vendeur %}
+                        <div class="produit-item">
+                            <strong>{{ ligne.produit.nom }}</strong>
+                            {% if ligne.produit.marque %}
+                                <br><small>{{ ligne.produit.marque }} {{ ligne.produit.modele }}</small>
+                            {% endif %}
+                            <br><small>Quantité: {{ ligne.quantite }} | Prix: {{ ligne.get_sous_total }}€</small>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{ lien_validation }}" class="btn">🔍 Voir et valider la commande</a>
+            </div>
+
+            <p><strong>⚠️ Action requise :</strong> Vous devez valider ou refuser cette commande dans les plus brefs délais.</p>
+
+            <p>Cordialement,<br>
+            <strong>L'équipe MonGba</strong></p>
+        </div>
+
+        <div class="footer">
+            <p>Cet email a été envoyé automatiquement par MonGba.<br>
+            Ne pas répondre à cet email.</p>
+        </div>
+    </div>
+</body>
+</html>

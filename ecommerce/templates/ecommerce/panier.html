@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier - Mon Gba</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'ecommerce:index' %}">Mon<span>Gba</span></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a href="{% url 'ecommerce:index' %}" class="nav-link">Accueil</a></li>
+                    <li class="nav-item"><a href="{% url 'ecommerce:services' %}" class="nav-link">Services</a></li>
+                    <li class="nav-item"><a href="{% url 'ecommerce:car' %}" class="nav-link">Voitures</a></li>
+                    {% if user.is_authenticated %}
+                        {% if user.profil.est_client %}
+                            <li class="nav-item"><a href="{% url 'ecommerce:profil_client' %}" class="nav-link">Profil</a></li>
+                        {% endif %}
+                        {% if user.profil.est_vendeur %}
+                            <li class="nav-item"><a href="{% url 'ecommerce:profil_vendeur_prive' %}" class="nav-link">Profil</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a href="{% url 'account_logout' %}" class="nav-link">Déconnexion</a></li>
+                      {% else %}
+                        <li class="nav-item"><a href="{% url 'account_login' %}" class="nav-link">Connexion</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({% static 'images/bg_3.jpg' %});" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+          <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+            <div class="col-md-9 ftco-animate pb-5">
+                <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'ecommerce:profil_client' %}">Profil <i class="ion-ios-arrow-forward"></i></a></span> <span>Panier <i class="ion-ios-arrow-forward"></i></span></p>
+              <h1 class="mb-3 bread">Panier</h1>
+            </div>
+          </div>
+        </div>
+    </section>
+
+    {% if messages %}
+        <div class="container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+<section class="ftco-section">
+    <div class="container">
+        {% include 'ecommerce/etapes.html' %}
+        <div class="row justify-content-center">
+            <div class="col-md-12 text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
+                <h2 class="heading-section">Votre Panier</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% if elements %}
+                    <table class="table" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th>Prix unitaire</th>
+                                <th>Quantité</th>
+                                <th>Sous-total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for element in elements %}
+                                <tr data-aos="fade-right" data-aos-delay="{{ forloop.counter|add:200 }}">
+                                    <td>
+                                        {% if element.produit.image %}
+                                            <img src="{{ element.produit.image.url }}" alt="{{ element.produit.nom }}" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover; margin-right: 10px;">
+                                        {% endif %}
+                                        <strong>{{ element.produit.nom }}</strong>
+                                        <br><small class="text-muted">Vendeur: {{ element.produit.vendeur.username }}</small>
+                                    </td>
+                                    <td>{{ element.produit.prix }} €</td>
+                                    <td>
+                                        <form action="{% url 'ecommerce:mettre_a_jour_panier' %}" method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="car_id" value="{{ element.produit.id }}">
+                                            <input type="number" name="quantite" value="{{ element.quantite }}" min="1" max="{{ element.produit.stock }}" required style="width: 80px;" class="form-control d-inline-block">
+                                            <button type="submit" class="btn btn-sm btn-primary ml-2">Mettre à jour</button>
+                                        </form>
+                                    </td>
+                                    <td><strong>{{ element.get_sous_total }} €</strong></td>
+                                    <td>
+                                        <form action="{% url 'ecommerce:supprimer_du_panier' element.produit.id %}" method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <tr data-aos="fade-up" data-aos-delay="300">
+                                <td colspan="3" class="text-right"><strong>Total</strong></td>
+                                <td><strong>{{ total|floatformat:2 }} €</strong></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% if user.is_authenticated %}
+                        <div class="text-center" data-aos="fade-up" data-aos-delay="400">
+                            <a href="{% url 'ecommerce:informations_client' %}" class="btn btn-primary btn-lg">
+                                <i class="flaticon-shopping-cart"></i> Procéder à la commande
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info text-center" data-aos="fade-up" data-aos-delay="400">
+                            <p>Vous devez être connecté pour passer une commande.</p>
+                            <a href="{% url 'account_login' %}" class="btn btn-primary">Connectez-vous</a> ou
+                            <a href="{% url 'account_signup' %}" class="btn btn-outline-primary">Créez un compte</a>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <p class="text-center" data-aos="fade-up" data-aos-delay="400">Votre panier est vide.</p>
+                {% endif %}
+                <p class="text-center mt-3" data-aos="fade-up" data-aos-delay="700">
+                    <a href="{% url 'ecommerce:car' %}" class="btn btn-secondary">Continuer vos achats</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <footer class="ftco-footer ftco-bg-dark ftco-section">
+        <div class="container">
+          <div class="row mb-5">
+            <div class="col-md">
+              <div class="ftco-footer-widget mb-4">
+                <h2 class="ftco-heading-2"><a href="#" class="logo">Mon<span>Gba</span></a></h2>
+                <p>Votre partenaire de confiance pour trouver la voiture de vos rêves au meilleur prix, avec un service personnalisé et professionnel.</p>
+                <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                  <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                  <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                  <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="ftco-footer-widget mb-4 ml-md-5">
+                <h2 class="ftco-heading-2">Information</h2>
+                <ul class="list-unstyled">
+                  <li><a href="#" class="py-2 d-block">About</a></li>
+                  <li><a href="#" class="py-2 d-block">Services</a></li>
+                  <li><a href="#" class="py-2 d-block">Term and Conditions</a></li>
+                  <li><a href="#" class="py-2 d-block">Best Price Guarantee</a></li>
+                  <li><a href="#" class="py-2 d-block">Privacy &amp; Cookies Policy</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md">
+               <div class="ftco-footer-widget mb-4">
+                <h2 class="ftco-heading-2">Customer Support</h2>
+                <ul class="list-unstyled">
+                  <li><a href="#" class="py-2 d-block">FAQ</a></li>
+                  <li><a href="#" class="py-2 d-block">Payment Option</a></li>
+                  <li><a href="#" class="py-2 d-block">Booking Tips</a></li>
+                  <li><a href="#" class="py-2 d-block">How it works</a></li>
+                  <li><a href="#" class="py-2 d-block">Contact Us</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="ftco-footer-widget mb-4">
+                  <h2 class="ftco-heading-2">Have a Questions?</h2>
+                  <div class="block-23 mb-3">
+                    <ul>
+                      <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+                      <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+                      <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+                    </ul>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </footer>
+
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'js/aos.js' %}"></script>
+    <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
+    <script src="{% static 'js/scrollax.min.js' %}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="{% static 'js/google-map.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

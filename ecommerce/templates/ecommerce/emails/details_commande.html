@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de votre commande - MonGba</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: white;
+            margin: 20px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #007bff;
+        }
+        .header h1 {
+            color: #007bff;
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .commande-info {
+            background-color: #e7f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #b8daff;
+        }
+        .produits-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .produits-table th, .produits-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .produits-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .produits-table .prix {
+            text-align: right;
+            font-weight: bold;
+        }
+        .total-row {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .total-row .prix {
+            color: #007bff;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .success-icon {
+            font-size: 48px;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .vendeur-info {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+            font-size: 12px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="success-icon">📋</div>
+            <h1>Détails de votre commande</h1>
+            <p>Voici le récapitulatif complet de votre achat</p>
+        </div>
+
+        <div class="content">
+            <p>Bonjour <strong>{{ client.get_full_name|default:client.username }}</strong>,</p>
+
+            <p>Merci d'avoir passé commande sur <strong>DriveShop</strong> ! Voici un récapitulatif détaillé de votre commande.</p>
+
+            <div class="commande-info">
+                <h3>📋 Informations de commande</h3>
+                <p><strong>Numéro de commande :</strong> {{ commande.numero_commande }}</p>
+                <p><strong>Date de commande :</strong> {{ commande.date_commande|date:"l d F Y à H:i" }}</p>
+                <p><strong>Statut :</strong> <span style="color: #ffc107; font-weight: bold;">En attente de confirmation</span></p>
+                <p><strong>Adresse de livraison :</strong> {{ commande.adresse_livraison }}</p>
+                <p><strong>Téléphone :</strong> {{ commande.telephone }}</p>
+            </div>
+
+            <h3>🛒 Produits commandés</h3>
+            <table class="produits-table">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Vendeur</th>
+                        <th>Quantité</th>
+                        <th>Prix unitaire</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ligne in lignes_commande %}
+                    <tr>
+                        <td>
+                            <strong>{{ ligne.produit.nom }}</strong>
+                            {% if ligne.produit.marque and ligne.produit.modele %}
+                            <br><small>{{ ligne.produit.marque }} {{ ligne.produit.modele }}</small>
+                            {% endif %}
+                        </td>
+                        <td>{{ ligne.produit.vendeur.username }}</td>
+                        <td>{{ ligne.quantite }}</td>
+                        <td class="prix">{{ ligne.prix_unitaire }}€</td>
+                        <td class="prix">{{ ligne.get_sous_total }}€</td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="total-row">
+                        <td colspan="4"><strong>Total de la commande</strong></td>
+                        <td class="prix">{{ commande.montant_total }}€</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <h4>📋 Prochaines étapes</h4>
+                <ol>
+                    <li><strong>Confirmation par le(s) vendeur(s)</strong> : Votre commande sera examinée et confirmée</li>
+                    <li><strong>Préparation</strong> : Les produits seront préparés pour l'expédition</li>
+                    <li><strong>Expédition</strong> : Vous recevrez un numéro de suivi</li>
+                    <li><strong>Livraison</strong> : Réception de vos produits</li>
+                </ol>
+            </div>
+
+            <div style="background-color: #d1ecf1; padding: 15px; border-radius: 5px; margin: 20px 0; border: 1px solid #bee5eb;">
+                <h4>💬 Support client</h4>
+                <p>Une question concernant votre commande ? N'hésitez pas à nous contacter :</p>
+                <ul>
+                    <li><strong>Email :</strong> support@driveshop.com</li>
+                    <li><strong>Téléphone :</strong> 01 23 45 67 89</li>
+                    <li><strong>Horaires :</strong> Du lundi au vendredi, 9h-18h</li>
+                </ul>
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{ lien_commandes }}" class="btn">📋 Suivre ma commande</a>
+            </div>
+
+            <p>Nous vous remercions pour votre confiance et restons à votre disposition pour toute question.</p>
+
+            <p>Cordialement,<br>
+            <strong>L'équipe DriveShop</strong></p>
+        </div>
+
+        <div class="footer">
+            <p>Cet email a été envoyé automatiquement. Merci de ne pas y répondre.</p>
+            <p>&copy; 2025 DriveShop - Tous droits réservés</p>
+        </div>
+    </div>
+</body>
+</html>

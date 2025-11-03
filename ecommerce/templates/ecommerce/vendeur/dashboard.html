@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tableau de bord Vendeur - Mon Gba{% endblock %}
+
+{% block hero %}
+<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({% static 'images/bg_3.jpg' %});" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+      <div class="col-md-9 ftco-animate pb-5">
+        <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'ecommerce:profil_vendeur_prive' %}">Profil <i class="ion-ios-arrow-forward"></i></a></span> <span>Tableau de bord <i class="ion-ios-arrow-forward"></i></span></p>
+        <h1 class="mb-3 bread">Tableau de bord</h1>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
+                <h1 class="heading-section">Tableau de bord Vendeur</h1>
+                <p class="text-muted">Bienvenue, {{ user.username }}</p>
+            </div>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-body text-center">
+                        <h3 class="card-title text-primary">{{ nb_produits }}</h3>
+                        <p class="card-text">Produits</p>
+                        <a href="{% url 'ecommerce:vendeur_produits' %}" class="btn btn-outline-primary btn-sm">Voir tous</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-body text-center">
+                        <h3 class="card-title text-success">{{ nb_commandes }}</h3>
+                        <p class="card-text">Commandes</p>
+                        <a href="{% url 'ecommerce:vendeur_commandes' %}" class="btn btn-outline-success btn-sm">Voir toutes</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card-body text-center">
+                        <h3 class="card-title text-warning">{{ total_ventes|floatformat:2 }} €</h3>
+                        <p class="card-text">Total ventes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions rapides -->
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                <div class="card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Actions rapides</h5>
+                    </div>
+                    <div class="card-body">
+                        <a href="{% url 'ecommerce:vendeur_creer_produit' %}" class="btn btn-primary mr-2">Créer un nouveau produit</a>
+                        <a href="{% url 'ecommerce:vendeur_produits' %}" class="btn btn-outline-primary mr-2">Mes produits</a>
+                        <a href="{% url 'ecommerce:vendeur_commandes' %}" class="btn btn-outline-success mr-2">Mes commandes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dernières commandes -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Dernières commandes</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if commandes %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Numéro</th>
+                                            <th>Client</th>
+                                            <th>Montant</th>
+                                            <th>Statut</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for commande in commandes %}
+                                        <tr>
+                                            <td>{{ commande.numero_commande }}</td>
+                                            <td>{{ commande.client.username }}</td>
+                                            <td>{{ commande.montant_total }} €</td>
+                                            <td><span class="badge badge-info">{{ commande.get_statut_display }}</span></td>
+                                            <td>{{ commande.date_commande|date:"d/m/Y H:i" }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <p class="text-center text-muted">Aucune commande pour le moment</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

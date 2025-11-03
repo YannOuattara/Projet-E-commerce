@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mes Avis - Mon Gba{% endblock %}
+
+{% block hero %}
+<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({% static 'images/bg_3.jpg' %});" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+      <div class="col-md-9 ftco-animate pb-5">
+        <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'ecommerce:profil_client' %}">Profil <i class="ion-ios-arrow-forward"></i></a></span>
+        
+        <span>
+          Mes Avis
+          <i class="ion-ios-arrow-forward"></i>
+        </span></p>
+        <h1 class="mb-3 bread">
+          <i class="ion-ios-star mr-3 text-primary"></i>
+          Mes Avis
+        </h1>
+        <p class="text-white-50">Connecté en tant que : <strong class="text-white">{{ user.username }}</strong> ({{ user.profil.get_role_display }})</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="ftco-section bg-light">
+    <div class="container">
+        <!-- Statistics Cards -->
+        {% if reviews %}
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <div class="card shadow-sm border-0" data-aos="fade-up">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-4">
+                            <i class="ion-ios-stats mr-2 text-primary"></i>
+                            Aperçu de vos avis
+                        </h5>
+                        <div class="row text-center">
+                            <div class="col-md-4 mb-3">
+                                <div class="p-3 bg-warning text-white rounded">
+                                    <h2 class="mb-1">{{ total_reviews }}</h2>
+                                    <p class="mb-0 small">Total avis</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="p-3 bg-success text-white rounded">
+                                    <h2 class="mb-1">{{ average_rating }}</h2>
+                                    <p class="mb-0 small">Note moyenne</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="p-3 bg-info text-white rounded">
+                                    <h2 class="mb-1">
+                                        {% for review in reviews %}
+                                            {% if forloop.first %}{{ review.note }}{% endif %}
+                                        {% empty %}-
+                                        {% endfor %}
+                                    </h2>
+                                    <p class="mb-0 small">Dernière note</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rating Distribution -->
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <div class="card shadow-sm border-0" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-header bg-warning text-dark">
+                        <h6 class="mb-0">
+                            <i class="ion-ios-pie mr-2"></i>Répartition de vos notes
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        {% for rating, data in rating_stats %}
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="mr-3" style="width: 60px;">
+                                    <span class="badge badge-pill badge-secondary px-2 py-1">{{ rating }} étoile{{ rating|pluralize }}</span>
+                                </div>
+                                <div class="progress flex-grow-1" style="height: 20px;">
+                                    <div class="progress-bar bg-warning" role="progressbar" 
+                                         style="width: {{ data.percentage }}%" 
+                                         aria-valuenow="{{ data.count }}" aria-valuemin="0" aria-valuemax="{{ total_reviews }}">
+                                        {{ data.count }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Reviews List -->
+        {% if reviews %}
+            <div class="row">
+                {% for review in reviews %}
+                <div class="col-md-12 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-header bg-white border-0">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h5 class="mb-1">
+                                        <i class="ion-ios-star mr-2 text-warning"></i>
+                                        <a href="{% url 'ecommerce:car_single' review.produit.id %}" class="text-decoration-none text-dark">
+                                            {{ review.produit.nom }}
+                                        </a>
+                                    </h5>
+                                    <small class="text-muted">
+                                        <i class="ion-ios-calendar mr-1"></i>
+                                        {{ review.date_creation|date:"l d F Y à H:i" }}
+                                    </small>
+                                </div>
+                                <div class="col-md-4 text-right">
+                                    <div class="d-flex align-items-center justify-content-end">
+                                        <div class="stars mr-3">
+                                            {% for i in "12345"|make_list %}
+                                                {% if forloop.counter <= review.note %}
+                                                    <i class="fa fa-star text-warning"></i>
+                                                {% else %}
+                                                    <i class="fa fa-star-o text-muted"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <span class="badge badge-pill badge-warning px-3 py-2">
+                                            {{ review.note }}/5
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- Product Info -->
+                                <div class="col-md-8">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <h6 class="mt-0 mb-1">Produit</h6>
+                                            <p class="mb-2">{{ review.produit.description|truncatewords:30 }}</p>
+                                            {% if review.produit.marque %}
+                                                <small class="text-muted">
+                                                    <i class="ion-ios-car mr-1"></i>{{ review.produit.marque }} {{ review.produit.modele }}
+                                                </small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    {% if review.commentaire %}
+                                    <hr>
+                                    <h6 class="text-primary">Votre commentaire :</h6>
+                                    <div class="bg-light p-3 rounded">
+                                        <p class="mb-0">{{ review.commentaire }}</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Vendor Info -->
+                                <div class="col-md-4">
+                                    <div class="bg-light p-3 rounded">
+                                        <h6 class="text-primary mb-3">
+                                            <i class="ion-ios-person mr-2"></i>Vendeur
+                                        </h6>
+                                        <p class="mb-1"><strong>{{ review.produit.vendeur.username }}</strong></p>
+                                        {% if review.produit.vendeur.profil.company_name %}
+                                            <p class="mb-1">{{ review.produit.vendeur.profil.company_name }}</p>
+                                        {% endif %}
+                                        <p class="mb-0">
+                                            <a href="{% url 'ecommerce:car_single' review.produit.id %}" class="btn btn-sm btn-outline-primary">
+                                                <i class="ion-ios-eye mr-1"></i>Voir le produit
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <div class="text-right">
+                                <a href="{% url 'ecommerce:car_single' review.produit.id %}#reviews-section" class="btn btn-outline-info btn-sm">
+                                    <i class="ion-ios-chatboxes mr-1"></i>Voir tous les avis
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center" data-aos="fade-up">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body py-5">
+                            <div class="empty-state-icon mb-4">
+                                <i class="ion-ios-star-outline display-1 text-muted"></i>
+                            </div>
+                            <h3 class="text-muted mb-3">Aucun avis laissé</h3>
+                            <p class="text-muted mb-4">
+                                Vous n'avez pas encore laissé d'avis sur vos achats. Partagez votre expérience avec la communauté !
+                            </p>
+                            <div class="d-flex justify-content-center">
+                                <a href="{% url 'ecommerce:car' %}" class="btn btn-primary btn-lg mr-3">
+                                    <i class="ion-ios-search mr-2"></i>Découvrir les véhicules
+                                </a>
+                                <a href="{% url 'ecommerce:profil_client' %}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="ion-ios-person mr-2"></i>Retour au profil
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

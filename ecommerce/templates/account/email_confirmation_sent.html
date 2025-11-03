@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Email de confirmation envoyé - Mon Gba{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6" data-aos="fade-up" data-aos-duration="1000">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0 text-center">Confirmation d'email</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-center">Un email de confirmation a été envoyé à votre adresse email. Veuillez vérifier votre boîte de réception et cliquer sur le lien pour activer votre compte.</p>
+                        <p class="text-center">Si vous ne voyez pas l'email, vérifiez votre dossier spam.</p>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'account_login' %}" class="btn btn-secondary">Retour à la connexion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Paiement - Mon Gba{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        {% include 'ecommerce/etapes.html' %}
+        <div class="row justify-content-center">
+            <div class="col-md-12 text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
+                <h2 class="heading-section">Facturation et Paiement</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <form method="post">
+                    {% csrf_token %}
+                    <p data-aos="fade-up" data-aos-delay="200">Total à payer : <strong>${{ total|floatformat:2 }}</strong></p>
+                    <div class="form-group" data-aos="fade-up" data-aos-delay="300">
+                        <label for="methode_paiement">Méthode de paiement</label>
+                        <select name="methode_paiement" id="methode_paiement" class="form-control">
+                            <option value="carte">Carte Bancaire</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="virement">Virement Bancaire</option>
+                        </select>
+                    </div>
+                    <div data-aos="fade-up" data-aos-delay="400">
+                        <button type="submit" class="btn btn-success btn-block">Confirmer le paiement</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

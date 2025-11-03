@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Commande Complétée - Mon Gba{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        {% include 'ecommerce/etapes.html' %}
+        <div class="row justify-content-center">
+            <div class="col-md-12 text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
+                <h2 class="heading-section">Commande Complétée</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p class="success-message" data-aos="fade-up" data-aos-delay="200">Merci pour votre commande ! Vous recevrez un e-mail de confirmation bientôt.</p>
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <a href="{% url 'ecommerce:index' %}" class="btn btn-primary">Retour à l'accueil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

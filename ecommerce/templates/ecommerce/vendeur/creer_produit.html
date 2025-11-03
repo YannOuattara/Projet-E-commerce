@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Créer un Produit - Mon Gba{% endblock %}
+
+{% block hero %}
+<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({% static 'images/bg_3.jpg' %});" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+      <div class="col-md-9 ftco-animate pb-5">
+        <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'ecommerce:profil_vendeur_prive' %}">Profil <i class="ion-ios-arrow-forward"></i></a></span> <span>Créer un produit <i class="ion-ios-arrow-forward"></i></span></p>
+        <h1 class="mb-3 bread">Créer un Produit</h1>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8" data-aos="fade-up" data-aos-duration="1000">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Créer un nouveau produit</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <div class="form-group">
+                                <label for="nom">Nom du produit *</label>
+                                <input type="text" class="form-control" id="nom" name="nom" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Description *</label>
+                                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                            </div>
+
+                            <h5 class="mt-4 mb-3">Informations sur le véhicule</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="marque">Marque</label>
+                                        <input type="text" class="form-control" id="marque" name="marque" placeholder="Ex: Peugeot, Renault, BMW...">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="modele">Modèle</label>
+                                        <input type="text" class="form-control" id="modele" name="modele" placeholder="Ex: 208, Clio, X3...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="annee_fabrication">Année de fabrication</label>
+                                        <input type="number" class="form-control" id="annee_fabrication" name="annee_fabrication" min="1900" max="2030" placeholder="Ex: 2020">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="kilometrage">Kilométrage</label>
+                                        <input type="number" class="form-control" id="kilometrage" name="kilometrage" placeholder="Ex: 50000">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="carburant">Carburant</label>
+                                        <select class="form-control" id="carburant" name="carburant">
+                                            <option value="">-- Sélectionner --</option>
+                                            <option value="essence">Essence</option>
+                                            <option value="diesel">Diesel</option>
+                                            <option value="electrique">Électrique</option>
+                                            <option value="hybride">Hybride</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="transmission">Transmission</label>
+                                        <select class="form-control" id="transmission" name="transmission">
+                                            <option value="">-- Sélectionner --</option>
+                                            <option value="manuelle">Manuelle</option>
+                                            <option value="automatique">Automatique</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="nombre_portes">Nombre de portes</label>
+                                        <input type="number" class="form-control" id="nombre_portes" name="nombre_portes" min="1" max="10">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="nombre_places">Nombre de places</label>
+                                        <input type="number" class="form-control" id="nombre_places" name="nombre_places" min="1" max="20">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="etat">État</label>
+                                        <select class="form-control" id="etat" name="etat">
+                                            <option value="">-- Sélectionner --</option>
+                                            <option value="neuf">Neuf</option>
+                                            <option value="occasion">Occasion</option>
+                                            <option value="reconditionne">Reconditionné</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="equipements">Équipements (séparés par des virgules)</label>
+                                <textarea class="form-control" id="equipements" name="equipements" rows="3" placeholder="Ex: Climatisation, GPS, caméra de recul, Bluetooth..."></textarea>
+                                <small class="form-text text-muted">Listez les équipements séparés par des virgules</small>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="prix">Prix (€) *</label>
+                                        <input type="number" step="0.01" class="form-control" id="prix" name="prix" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="stock">Stock *</label>
+                                        <input type="number" class="form-control" id="stock" name="stock" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="categorie">Catégorie</label>
+                                <select class="form-control" id="categorie" name="categorie">
+                                    <option value="">-- Sélectionner une catégorie --</option>
+                                    {% for categorie in categories %}
+                                        <option value="{{ categorie.id }}">{{ categorie.nom }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Étiquettes</label>
+                                <div class="row">
+                                    {% for etiquette in etiquettes %}
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="etiquettes" value="{{ etiquette.id }}" id="etiquette_{{ etiquette.id }}">
+                                                <label class="form-check-label" for="etiquette_{{ etiquette.id }}">
+                                                    {{ etiquette.nom }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="image">Image du produit</label>
+                                <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="disponible" name="disponible" checked>
+                                <label class="form-check-label" for="disponible">
+                                    Produit disponible
+                                </label>
+                            </div>
+
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn btn-primary btn-lg mr-2">Créer le produit</button>
+                                <a href="{% url 'ecommerce:vendeur_produits' %}" class="btn btn-secondary btn-lg">Annuler</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
